@@ -1,0 +1,29 @@
+{
+  organization(login: "GlobTek-Engineering") {
+    projectV2(number: 10) {
+      title
+      items(first: 100) {
+        nodes {
+          id
+          fieldValues(first: 10) {
+            nodes {
+              ... on ProjectV2ItemFieldTextValue { text field { ... on ProjectV2Field { name } } }
+              ... on ProjectV2ItemFieldSingleSelectValue { name field { ... on ProjectV2SingleSelectField { name } } }
+              ... on ProjectV2ItemFieldDateValue { date field { ... on ProjectV2Field { name } } }
+            }
+          }
+          content {
+            ... on Issue {
+              number
+              title
+              body
+              state
+              labels(first: 10) { nodes { name } }
+              comments(first: 50) { nodes { author { login } body createdAt } }
+            }
+          }
+        }
+      }
+    }
+  }
+}
