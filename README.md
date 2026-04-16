@@ -1,5 +1,3 @@
-npm install docx
-
 # GTM965500P Test Report Generator
 
 Pulls live data from the GitHub project board and generates test reports in HTML, DOCX, and PDF formats — split by output voltage (12V, 24V, 54V, Model Level) and as a combined all-models report.
@@ -17,22 +15,18 @@ Pulls live data from the GitHub project board and generates test reports in HTML
 
 ---
 
-## Setup
+## First-Time Setup
 
 **1. Install Node dependencies:**
 ```bash
 npm install docx
 ```
 
-**2. Set your GitHub token** in `generate_report.js`:
-```js
-const GITHUB_TOKEN = 'your_token_here';
-```
-Get your token with:
+**2. Save your GitHub token locally:**
 ```bash
-gh auth token
+make auth
 ```
-Without a token, images in comments will appear as `[image]` placeholders — all other content still generates normally.
+This runs `gh auth token` and writes the result to a local `.env` file that is gitignored — your token never touches the repo. You only need to do this once after cloning (or again if your token expires).
 
 ---
 
@@ -57,8 +51,14 @@ Fetches fresh data from GitHub, then generates **DOCX and PDF reports only**. HT
 make pdf
 ```
 
+### `make auth`
+Saves your GitHub token to a local `.env` file. Run this once after cloning — all subsequent `make` commands read the token from there automatically.
+```bash
+make auth
+```
+
 ### `make fetch`
-Fetches GitHub project data and writes the JSON files, but does **not** generate any reports. Useful for inspecting the raw data before running a report.
+Fetches GitHub project data and writes the JSON files, but does **not** generate any reports. Requires `.env` to exist (run `make auth` first).
 ```bash
 make fetch
 ```
@@ -67,7 +67,7 @@ Outputs:
 - `GTM965500P_pretty.json` — formatted version used by the generator
 
 ### `make clean`
-Deletes all generated output folders and the cached JSON files.
+Deletes all generated output folders and the cached JSON files. Does **not** delete `.env`.
 ```bash
 make clean
 ```
