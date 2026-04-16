@@ -25,16 +25,14 @@ const fs = require('fs')
 const path = require('path')
 
 const _envPath = path.join(__dirname, '.env');
-if (!fs.existsSync(_envPath)) {
-  console.error('⚠️  No .env file found. Run "make auth" first to save your GitHub token.');
-  process.exit(1);
-}
-const _env = Object.fromEntries(
-  fs.readFileSync(_envPath, 'utf-8')
-    .split(/\r?\n/)
-    .filter(l => l.includes('='))
-    .map(l => { const i = l.indexOf('='); return [l.slice(0,i).trim(), l.slice(i+1).trim()]; })
-);
+const _env = fs.existsSync(_envPath)
+  ? Object.fromEntries(
+      fs.readFileSync(_envPath, 'utf-8')
+        .split(/\r?\n/)
+        .filter(l => l.includes('='))
+        .map(l => l.split('=').map(s => s.trim()))
+    )
+  : {};
 const GITHUB_TOKEN = _env.GITHUB_TOKEN || '';
 
 const https = require('https');
@@ -533,16 +531,20 @@ async function writeDoc(doc, outPath) {
   const isWin = process.platform === 'win32';
   const buf    = await Packer.toBuffer(doc);
   const tmpDoc = outPath + '.tmp.docx';
+  const tmpZip = outPath + '.tmp.zip';   // PowerShell only accepts .zip extension
   const tmpDir = outPath + '.tmp_unpack';
   fs.writeFileSync(tmpDoc, buf);
 
-  // ── Create clean temp dir (cross-platform) ──────────────────────────────────
+  // ── Create clean temp dir (cross-platform via Node fs) ──────────────────────
   try { fs.rmSync(tmpDir, { recursive: true, force: true }); } catch {}
   fs.mkdirSync(tmpDir, { recursive: true });
 
-  // ── Unzip DOCX into temp dir (cross-platform) ───────────────────────────────
+  // ── Unzip DOCX into temp dir ─────────────────────────────────────────────────
   if (isWin) {
-    execSync(`powershell -Command "Expand-Archive -Path '${tmpDoc}' -DestinationPath '${tmpDir}' -Force"`);
+    // PowerShell's Expand-Archive refuses .docx — rename to .zip first
+    fs.copyFileSync(tmpDoc, tmpZip);
+    execSync(`powershell -Command "Expand-Archive -Path '${tmpZip}' -DestinationPath '${tmpDir}' -Force"`);
+    try { fs.unlinkSync(tmpZip); } catch {}
   } else {
     execSync(`unzip -q "${tmpDoc}" -d "${tmpDir}"`);
   }
@@ -554,10 +556,13 @@ async function writeDoc(doc, outPath) {
   xml = xml.replace(/(<w:bookmarkEnd[^>]*)w:id="[^"]*"/g,   (m, pre) => `${pre}w:id="${endId++}"`);
   fs.writeFileSync(path.join(tmpDir, 'word', 'document.xml'), xml);
 
-  // ── Re-zip back into DOCX (cross-platform) ──────────────────────────────────
+  // ── Re-zip back into DOCX ────────────────────────────────────────────────────
   if (isWin) {
+    // Compress-Archive won't overwrite — delete first, compress to .zip, rename to .docx
     if (fs.existsSync(outPath)) fs.unlinkSync(outPath);
-    execSync(`powershell -Command "Compress-Archive -Path '${tmpDir}\\*' -DestinationPath '${outPath}' -Force"`);
+    if (fs.existsSync(tmpZip))  fs.unlinkSync(tmpZip);
+    execSync(`powershell -Command "Compress-Archive -Path '${tmpDir}\\*' -DestinationPath '${tmpZip}' -Force"`);
+    fs.renameSync(tmpZip, outPath);
   } else {
     execSync(`cd "${tmpDir}" && zip -q -r "${outPath}" .`);
   }
@@ -566,7 +571,7 @@ async function writeDoc(doc, outPath) {
   try { fs.rmSync(tmpDir, { recursive: true }); } catch {}
   try { fs.unlinkSync(tmpDoc); } catch {}
 
-  // ── Convert to PDF via LibreOffice (cross-platform) ─────────────────────────
+  // ── Convert to PDF via LibreOffice ───────────────────────────────────────────
   // Linux/WSL: `libreoffice`   Windows: `soffice` (must be on PATH)
   const soffice = isWin ? 'soffice' : 'libreoffice';
   try {
