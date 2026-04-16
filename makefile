@@ -3,7 +3,7 @@
 #   make          - fetch fresh data from GitHub + generate all reports (docx + pdf + html)
 #   make html     - fetch fresh data + generate HTML reports only
 #   make pdf      - fetch fresh data + generate DOCX + PDF reports only
-#   make auth 	  - save your gh token to .env (run once after cloning)
+#   make auth     - save your gh token to .env (run once after cloning)
 #   make fetch    - fetch GitHub project data only (no report generation)
 #   make clean    - delete generated reports and image cache
 
@@ -27,22 +27,20 @@ pdf: fetch
 	@echo "Generating DOCX + PDF reports only..."
 	node $(SCRIPT) --pdf
 
-auth: 
+auth:
 	@echo "Saving GitHub token to $(ENV_FILE)..."
-	@echo "GITHUB_TOKEN=$$(gh auth token)" > $(ENV_FILE)
+	@echo GITHUB_TOKEN=$(shell gh auth token) > $(ENV_FILE)
 	@echo "Token saved to $(ENV_FILE) (gitignored)"
 
-
-# Always re-fetch — don't rely on file timestamps
 fetch:
-	@test -f $(ENV_FILE) || { echo "!! No .env file found. Run 'make auth'"; exit 1; }
 	@echo "Fetching GitHub project data..."
 	gh api graphql -F query=@$(QUERY) > $(RAW_JSON)
-	@echo "✓ Raw JSON written to $(RAW_JSON)"
+	@echo "Raw JSON written to $(RAW_JSON)"
 	python3 -m json.tool $(RAW_JSON) > $(PRETTY_JSON)
-	@echo "✓ Pretty-printed JSON written to $(PRETTY_JSON)"
+	@echo "Pretty-printed JSON written to $(PRETTY_JSON)"
 
 clean:
-	rm -f $(RAW_JSON) $(PRETTY_JSON)
-	rm -rf docx/ pdf/ .img_cache/ html/
-	@echo "✓ Cleaned up"
+	@echo "Cleaning up..."
+	-rm -f $(RAW_JSON) $(PRETTY_JSON)
+	-rm -rf docx/ pdf/ .img_cache/ html/
+	@echo "Cleaned up"

@@ -25,14 +25,16 @@ const fs = require('fs')
 const path = require('path')
 
 const _envPath = path.join(__dirname, '.env');
-const _env = fs.existsSync(_envPath)
-  ? Object.fromEntries(
-      fs.readFileSync(_envPath, 'utf-8')
-        .split(/\r?\n/)
-        .filter(l => l.includes('='))
-        .map(l => l.split('=').map(s => s.trim()))
-    )
-  : {};
+if (!fs.existsSync(_envPath)) {
+  console.error('⚠️  No .env file found. Run "make auth" first to save your GitHub token.');
+  process.exit(1);
+}
+const _env = Object.fromEntries(
+  fs.readFileSync(_envPath, 'utf-8')
+    .split(/\r?\n/)
+    .filter(l => l.includes('='))
+    .map(l => { const i = l.indexOf('='); return [l.slice(0,i).trim(), l.slice(i+1).trim()]; })
+);
 const GITHUB_TOKEN = _env.GITHUB_TOKEN || '';
 
 const https = require('https');
@@ -554,7 +556,6 @@ async function writeDoc(doc, outPath) {
 
   // ── Re-zip back into DOCX (cross-platform) ──────────────────────────────────
   if (isWin) {
-    // Remove existing output first — Compress-Archive won't overwrite cleanly
     if (fs.existsSync(outPath)) fs.unlinkSync(outPath);
     execSync(`powershell -Command "Compress-Archive -Path '${tmpDir}\\*' -DestinationPath '${outPath}' -Force"`);
   } else {
