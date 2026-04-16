@@ -4,29 +4,70 @@ Pulls live data from the GitHub project board and generates test reports in HTML
 
 ---
 
-## Requirements
+## First-Time Setup
 
-| Tool | Purpose |
-|------|---------|
-| Node.js + `npm install docx` | DOCX generation |
-| GitHub CLI (`gh`) | Fetching project data |
-| Python 3 | Pretty-printing the raw JSON |
-| LibreOffice (`libreoffice`) | Converting DOCX → PDF |
+### 1. Install dependencies
+
+**Windows (PowerShell):**
+```powershell
+winget install GnuWin32.Make
+winget install OpenJS.NodeJS
+winget install GitHub.cli
+winget install Python.Python.3
+```
+Close and reopen PowerShell after installing so the PATH updates.
+
+**Linux / WSL:**
+```bash
+sudo apt install make nodejs npm gh python3
+```
 
 ---
 
-## First-Time Setup
+### 2. Allow PowerShell scripts (Windows only)
+By default Windows blocks scripts from running. Run this once:
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
+Say `Y` when prompted. This only affects your user account.
 
-**1. Install Node dependencies:**
-```bash
+---
+
+### 3. Clone the repo
+```powershell
+git clone https://github.com/GlobTek-Engineering/report-generator.git
+cd report-generator
+```
+
+---
+
+### 4. Install Node dependencies
+```powershell
 npm install docx
 ```
 
-**2. Save your GitHub token locally:**
-```bash
+---
+
+### 5. Set up your GitHub token
+Your token needs the `read:project` scope to access the GitHub project board.
+
+**Check your token:**
+1. Go to https://github.com/settings/tokens
+2. Click your token
+3. Make sure **`read:project`** is checked
+4. Scroll to the bottom and make sure **GlobTek Engineering** is authorized under **Organization access** — click **Grant** if not
+5. Save
+
+**Add the missing scope if needed:**
+```powershell
+gh auth refresh -s read:project
+```
+
+**Save your token locally:**
+```powershell
 make auth
 ```
-This runs `gh auth token` and writes the result to a local `.env` file that is gitignored — your token never touches the repo. You only need to do this once after cloning (or again if your token expires).
+This writes your token to a local `.env` file that is gitignored — it never touches the repo. Run this once after cloning, or again if your token expires.
 
 ---
 
@@ -58,7 +99,7 @@ make auth
 ```
 
 ### `make fetch`
-Fetches GitHub project data and writes the JSON files, but does **not** generate any reports. Requires `.env` to exist (run `make auth` first).
+Fetches GitHub project data and writes the JSON files, but does **not** generate any reports.
 ```bash
 make fetch
 ```
@@ -67,7 +108,7 @@ Outputs:
 - `GTM965500P_pretty.json` — formatted version used by the generator
 
 ### `make clean`
-Deletes all generated output folders and the cached JSON files. Does **not** delete `.env`.
+Deletes all generated output folders and cached JSON files. Does **not** delete `.env`.
 ```bash
 make clean
 ```
@@ -112,6 +153,19 @@ Each report contains:
 - **Tests Not Yet Run** — items with no comments or Unknown status
 - **Detailed Test Results** — full comment threads per test, with Results, Changes, and other comments shown in collapsible sections
 - **Untested Specifications** — spec body text for items that haven't been run yet
+
+---
+
+## PDF Generation
+
+PDF conversion requires LibreOffice. If it's not installed, DOCX files will still generate normally — PDF will just be skipped with a warning.
+
+**Windows:** Download from https://www.libreoffice.org and make sure `soffice` is on your PATH after installing.
+
+**Linux / WSL:**
+```bash
+sudo apt install libreoffice
+```
 
 ---
 
