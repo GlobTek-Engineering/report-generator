@@ -18,10 +18,23 @@
  *   Leave blank to skip images (they'll show as [image] placeholders).
  */
 
-const GITHUB_TOKEN = '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'; // <-- paste your token here: gh auth token
+// ── Auth token — loaded from .env (never commit that file) ───────────────────
+// Run `make auth` once after cloning to populate .env with your gh token.
 
-const fs   = require('fs');
-const path = require('path');
+const fs = require('fs')
+const path = require('path')
+
+const _envPath = path.join(__dirname, '.env');
+const _env = fs.existsSync(_envPath)
+  ? Object.fromEntries(
+      fs.readFileSync(_envPath, 'utf-8')
+        .split(/\r?\n/)
+        .filter(l => l.includes('='))
+        .map(l => l.split('=').map(s => s.trim()))
+    )
+  : {};
+const GITHUB_TOKEN = _env.GITHUB_TOKEN || '';
+
 const https = require('https');
 const { execSync } = require('child_process');
 
