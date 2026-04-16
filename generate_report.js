@@ -528,37 +528,48 @@ function renderMarkdown(text, indent = 0) {
 // ── Document assembly ─────────────────────────────────────────────────────────
 // ── Write helper: pack buffer, fix bookmark IDs, save to outPath ─────────────
 async function writeDoc(doc, outPath) {
+  const isWin = process.platform === 'win32';
   const buf    = await Packer.toBuffer(doc);
   const tmpDoc = outPath + '.tmp.docx';
   const tmpDir = outPath + '.tmp_unpack';
   fs.writeFileSync(tmpDoc, buf);
 
-  execSync(`rmdir /s /q "${tmpDir}" 2>nul || rm -rf "${tmpDir}"; mkdir "${tmpDir}" 2>nul || mkdir -p "${tmpDir}"`);
+  // ── Create clean temp dir (cross-platform) ──────────────────────────────────
+  try { fs.rmSync(tmpDir, { recursive: true, force: true }); } catch {}
+  fs.mkdirSync(tmpDir, { recursive: true });
 
-  try {
-    execSync(`cd "${tmpDir}" && unzip -q "${tmpDoc}"`);
-  } catch {
+  // ── Unzip DOCX into temp dir (cross-platform) ───────────────────────────────
+  if (isWin) {
     execSync(`powershell -Command "Expand-Archive -Path '${tmpDoc}' -DestinationPath '${tmpDir}' -Force"`);
+  } else {
+    execSync(`unzip -q "${tmpDoc}" -d "${tmpDir}"`);
   }
 
+  // ── Fix duplicate bookmark IDs in document.xml ──────────────────────────────
   let xml = fs.readFileSync(path.join(tmpDir, 'word', 'document.xml'), 'utf-8');
   let startId = 1000, endId = 1000;
   xml = xml.replace(/(<w:bookmarkStart[^>]*?)w:id="[^"]*"/g, (m, pre) => `${pre}w:id="${startId++}"`);
   xml = xml.replace(/(<w:bookmarkEnd[^>]*)w:id="[^"]*"/g,   (m, pre) => `${pre}w:id="${endId++}"`);
   fs.writeFileSync(path.join(tmpDir, 'word', 'document.xml'), xml);
 
-  try {
-    execSync(`cd "${tmpDir}" && zip -q -r "${outPath}" .`);
-  } catch {
+  // ── Re-zip back into DOCX (cross-platform) ──────────────────────────────────
+  if (isWin) {
+    // Remove existing output first — Compress-Archive won't overwrite cleanly
+    if (fs.existsSync(outPath)) fs.unlinkSync(outPath);
     execSync(`powershell -Command "Compress-Archive -Path '${tmpDir}\\*' -DestinationPath '${outPath}' -Force"`);
+  } else {
+    execSync(`cd "${tmpDir}" && zip -q -r "${outPath}" .`);
   }
 
+  // ── Cleanup temp files ───────────────────────────────────────────────────────
   try { fs.rmSync(tmpDir, { recursive: true }); } catch {}
   try { fs.unlinkSync(tmpDoc); } catch {}
 
-  // Convert to PDF using LibreOffice, output to pdf/ folder
+  // ── Convert to PDF via LibreOffice (cross-platform) ─────────────────────────
+  // Linux/WSL: `libreoffice`   Windows: `soffice` (must be on PATH)
+  const soffice = isWin ? 'soffice' : 'libreoffice';
   try {
-    execSync(`libreoffice --headless --convert-to pdf "${outPath}" --outdir "${PDF_DIR}"`, { stdio: 'pipe' });
+    execSync(`"${soffice}" --headless --convert-to pdf "${outPath}" --outdir "${PDF_DIR}"`, { stdio: 'pipe' });
     const pdfName = path.basename(outPath).replace('.docx', '.pdf');
     console.log(`  PDF:     ${path.join(PDF_DIR, pdfName)}`);
   } catch (e) {
