@@ -212,7 +212,7 @@ function statusColors(s) {
   if (s === "Regression Req'd")  return { bg: C.regressionRed,  fg: C.regressionText };
   if (s === 'Has Issue')         return { bg: C.issueRed,        fg: C.issueText };
   if (s === 'In Progress')       return { bg: C.progressBlue,   fg: C.progressText };
-  if (s === 'Invalid/Incomplete Test') return { bg: C.invalidBg,     fg: C.invalidText };
+  if (s === "Clarification/Re-Test Req'd") return { bg: C.invalidBg,     fg: C.invalidText };
   return { bg: C.unknownGray, fg: C.unknownText };
 }
 
@@ -642,7 +642,7 @@ async function buildDoc(voltFilter = null) {
     rows: [
       new TableRow({ cantSplit: true, children: [
         hdrCell('Status', 1260), hdrCell('OK / Resolved', 1260), hdrCell('For Review', 1260),
-        hdrCell("Regression Req'd", 1260), hdrCell('In Progress', 1260), hdrCell('Has Issue', 1260), hdrCell('Invalid/Incomplete Test', 1260), hdrCell('Unknown', 1260),
+        hdrCell("Regression Req'd", 1260), hdrCell('In Progress', 1260), hdrCell('Has Issue', 1260), hdrCell("Clarification/Re-Test Req'd", 1260), hdrCell('Unknown', 1260),
       ]}),
       new TableRow({ cantSplit: true, children: [
         cell('Count', { bold: true, bg: C.altRow, width: 1260 }),
@@ -651,7 +651,7 @@ async function buildDoc(voltFilter = null) {
         cell(String(counts["Regression Req'd"]||0),   { align: AlignmentType.CENTER, bg: C.regressionRed,  fg: C.regressionText, bold: true, width: 1260 }),
         cell(String(counts['In Progress']||0),        { align: AlignmentType.CENTER, bg: C.progressBlue,   fg: C.progressText,   bold: true, width: 1260 }),
         cell(String(counts['Has Issue']||0),          { align: AlignmentType.CENTER, bg: C.issueRed,       fg: C.issueText,      bold: true, width: 1260 }),
-        cell(String(counts['Invalid/Incomplete Test']||0), { align: AlignmentType.CENTER, bg: C.invalidBg,      fg: C.invalidText,    bold: true, width: 1260 }),
+        cell(String(counts["Clarification/Re-Test Req'd"]||0), { align: AlignmentType.CENTER, bg: C.invalidBg,      fg: C.invalidText,    bold: true, width: 1260 }),
         cell(String(counts['Unknown']||0),            { align: AlignmentType.CENTER, bg: C.unknownGray,    fg: C.unknownText,    bold: true, width: 1260 }),
       ]}),
     ]
@@ -1308,7 +1308,7 @@ function buildHtml(voltFilter = null) {
     <thead><tr>
       <th>Status</th>
       <th>OK / Resolved</th><th>For Review</th><th>Regression Req'd</th>
-      <th>In Progress</th><th>Has Issue</th><th>Invalid/Incomplete Test</th><th>Unknown</th>
+      <th>In Progress</th><th>Has Issue</th><th>Clarification/Re-Test Req'd</th><th>Unknown</th>
     </tr></thead>
     <tbody><tr>
       <td><strong>Count</strong></td>
@@ -1317,7 +1317,7 @@ function buildHtml(voltFilter = null) {
       <td class="cnt regression">${counts["Regression Req'd"]||0}</td>
       <td class="cnt progress">${counts['In Progress']||0}</td>
       <td class="cnt issue">${counts['Has Issue']||0}</td>
-      <td class="cnt invalid">${counts['Invalid/Incomplete Test']||0}</td>
+      <td class="cnt invalid">${counts["Clarification/Re-Test Req'd"]||0}</td>
       <td class="cnt unknown">${counts['Unknown']||0}</td>
     </tr></tbody>
   </table>`;
