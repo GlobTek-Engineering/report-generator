@@ -46,12 +46,11 @@ const {
 } = require('docx');
 
 // ── Config ────────────────────────────────────────────────────────────────────
-const INPUT_FILE  = path.join(__dirname, 'GTM965500P_pretty.json');
+const INPUT_FILE  = path.join(__dirname, 'project_pretty.json');
 const IMG_CACHE   = path.join(__dirname, '.img_cache');
 const DOCX_DIR    = path.join(__dirname, 'docx');
 const PDF_DIR     = path.join(__dirname, 'pdf');
 const HTML_DIR    = path.join(__dirname, 'html');
-const OUTPUT_FILE = path.join(DOCX_DIR, 'GTM965500P_Test_Report.docx');
 
 // ── Mode flag  ────────────────────────────────────────────────────────────────
 //   node generate_report.js            → all  (docx + pdf + html)
@@ -74,6 +73,8 @@ if (MODE !== 'pdf') {
 // ── Load & parse JSON ─────────────────────────────────────────────────────────
 const raw  = fs.readFileSync(INPUT_FILE, 'utf-8').replace(/^\uFEFF/, '');
 const data = JSON.parse(raw);
+const PROJECT_NAME = data.data.organization.projectV2.title;
+const OUTPUT_FILE  = path.join(DOCX_DIR, `${PROJECT_NAME}_Test_Report.docx`);
 const nodes = data.data.organization.projectV2.items.nodes;
 
 function extractFields(node) {
@@ -205,6 +206,38 @@ const C = {
   invalidBg: 'EDE7F6', invalidText: '4527A0',
   border: 'BFBFBF', dataBorder: 'CCCCCC', dataHeader: 'D6E4F0'
 };
+
+function escHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// Convert inline markdown (**bold**, *italic*) to HTML, stripping any HTML tags first
+function inlineToHtml(text) {
+  return text
+    .replace(/<[^>]+>/g, '')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+}
+
+// Convert inline markdown (**bold**, *italic*) to an array of docx TextRuns
+function inlineToRuns(text, { size = 17, color = '222222', baseBold = false } = {}) {
+  const clean = text.replace(/<[^>]+>/g, '').trim();
+  const runs = [];
+  const regex = /\*\*([^*]+)\*\*|\*([^*]+)\*/g;
+  let last = 0, m;
+  while ((m = regex.exec(clean)) !== null) {
+    if (m.index > last)
+      runs.push(new TextRun({ text: clean.slice(last, m.index), bold: baseBold, size, font: 'Arial', color }));
+    if (m[1] !== undefined)
+      runs.push(new TextRun({ text: m[1], bold: true, size, font: 'Arial', color }));
+    else
+      runs.push(new TextRun({ text: m[2], italics: true, bold: baseBold, size, font: 'Arial', color }));
+    last = m.index + m[0].length;
+  }
+  if (last < clean.length)
+    runs.push(new TextRun({ text: clean.slice(last), bold: baseBold, size, font: 'Arial', color }));
+  return runs.length ? runs : [new TextRun({ text: clean, bold: baseBold, size, font: 'Arial', color })];
+}
 
 function statusColors(s) {
   if (s === 'OK / Resolved')     return { bg: C.passGreen,      fg: C.passText };
@@ -368,11 +401,9 @@ function parseMarkdownTableBlock(lines) {
         const imgPara = renderImg(imgMatch[1], 0, true, colWidths[ci]);
         cellChildren = [imgPara];
       } else {
-        const cleanText = cellText.replace(/<[^>]+>/g, '').trim();
-        cellChildren = [new Paragraph({ keepNext: !isLastRow, alignment: AlignmentType.CENTER, children: [
-          new TextRun({ text: cleanText, bold: isHeader, size: 17, font: 'Arial',
-            color: isHeader ? C.darkBlue : '222222' })
-        ]})];
+        cellChildren = [new Paragraph({ keepNext: !isLastRow, alignment: AlignmentType.CENTER,
+          children: inlineToRuns(cellText, { size: 17, color: isHeader ? C.darkBlue : '222222', baseBold: isHeader })
+        })];
       }
       cells.push(new TableCell({
         borders: dataAllBorders,
@@ -602,6 +633,7 @@ async function buildDoc(voltFilter = null) {
   const counts = {};
   for (const item of allActiveItems_counts) counts[item.status || 'Unknown'] = (counts[item.status || 'Unknown'] || 0) + 1;
   const total = allActiveItems_counts.length;
+  const statusList = Object.keys(counts).sort();
 
   const subtitle = voltFilter ? `${voltFilter} Model` : 'All Models';
 
@@ -610,7 +642,7 @@ async function buildDoc(voltFilter = null) {
   // ── Cover ───────────────────────────────────────────────────────────────────
   children.push(new Paragraph({
     alignment: AlignmentType.CENTER, spacing: { before: 720, after: 160 },
-    children: [new TextRun({ text: 'GTM965500P', bold: true, size: 80, font: 'Arial', color: C.darkBlue })]
+    children: [new TextRun({ text: PROJECT_NAME, bold: true, size: 80, font: 'Arial', color: C.darkBlue })]
   }));
   children.push(new Paragraph({
     alignment: AlignmentType.CENTER, spacing: { before: 0, after: 120 },
@@ -632,27 +664,25 @@ async function buildDoc(voltFilter = null) {
 
   // ── Summary ─────────────────────────────────────────────────────────────────
   children.push(h1('Test Summary'));
-  children.push(para(`Project: GTM965500P  |  ${subtitle}  |  Total Test Items: ${total}`, { bold: true }));
+  children.push(para(`Project: ${PROJECT_NAME}  |  ${subtitle}  |  Total Test Items: ${total}`, { bold: true }));
   children.push(spacer());
 
   // Status count table
-  const sumColW = [1260, 1260, 1260, 1260, 1260, 1260, 1260, 1260];
+  const colW = Math.floor(10080 / (statusList.length + 1));
+  const sumColW = Array(statusList.length + 1).fill(colW);
   children.push(new Table({
     width: { size: 10080, type: WidthType.DXA }, columnWidths: sumColW,
     rows: [
       new TableRow({ cantSplit: true, children: [
-        hdrCell('Status', 1260), hdrCell('OK / Resolved', 1260), hdrCell('For Review', 1260),
-        hdrCell("Regression Req'd", 1260), hdrCell('In Progress', 1260), hdrCell('Has Issue', 1260), hdrCell("Clarification/Re-Test Req'd", 1260), hdrCell('Unknown', 1260),
+        hdrCell('Status', colW),
+        ...statusList.map(s => hdrCell(s, colW)),
       ]}),
       new TableRow({ cantSplit: true, children: [
-        cell('Count', { bold: true, bg: C.altRow, width: 1260 }),
-        cell(String(counts['OK / Resolved']||0),     { align: AlignmentType.CENTER, bg: C.passGreen,      fg: C.passText,       bold: true, width: 1260 }),
-        cell(String(counts['Marked for review']||0),  { align: AlignmentType.CENTER, bg: C.reviewAmber,    fg: C.reviewText,     bold: true, width: 1260 }),
-        cell(String(counts["Regression Req'd"]||0),   { align: AlignmentType.CENTER, bg: C.regressionRed,  fg: C.regressionText, bold: true, width: 1260 }),
-        cell(String(counts['In Progress']||0),        { align: AlignmentType.CENTER, bg: C.progressBlue,   fg: C.progressText,   bold: true, width: 1260 }),
-        cell(String(counts['Has Issue']||0),          { align: AlignmentType.CENTER, bg: C.issueRed,       fg: C.issueText,      bold: true, width: 1260 }),
-        cell(String(counts["Clarification/Re-Test Req'd"]||0), { align: AlignmentType.CENTER, bg: C.invalidBg,      fg: C.invalidText,    bold: true, width: 1260 }),
-        cell(String(counts['Unknown']||0),            { align: AlignmentType.CENTER, bg: C.unknownGray,    fg: C.unknownText,    bold: true, width: 1260 }),
+        cell('Count', { bold: true, bg: C.altRow, width: colW }),
+        ...statusList.map(s => {
+          const { bg, fg } = statusColors(s);
+          return cell(String(counts[s] || 0), { align: AlignmentType.CENTER, bg, fg, bold: true, width: colW });
+        }),
       ]}),
     ]
   }));
@@ -1086,7 +1116,7 @@ async function buildDoc(voltFilter = null) {
         default: new Footer({ children: [new Paragraph({
           alignment: AlignmentType.CENTER,
           children: [
-            new TextRun({ text: 'GTM965500P Test Report  |  GlobTek Engineering  |  Page ', size: 16, font: 'Arial', color: '888888' }),
+            new TextRun({ text: `${PROJECT_NAME} Test Report  |  GlobTek Engineering  |  Page `, size: 16, font: 'Arial', color: '888888' }),
             new TextRun({ children: [PageNumber.CURRENT], size: 16, font: 'Arial', color: '888888' }),
             new TextRun({ text: ' of ', size: 16, font: 'Arial', color: '888888' }),
             new TextRun({ children: [PageNumber.TOTAL_PAGES], size: 16, font: 'Arial', color: '888888' }),
@@ -1170,7 +1200,7 @@ function mdToHtml(text) {
               const b64 = imgToBase64(path.join(IMG_CACHE, filename));
               return b64 ? `<${tag}><img src="${b64}" style="max-width:300px;height:auto;display:block;margin:4px auto"></${tag}>` : `<${tag}>[image]</${tag}>`;
             }
-            return `<${tag}>${c.replace(/<[^>]+>/g, '')}</${tag}>`;
+            return `<${tag}>${inlineToHtml(c)}</${tag}>`;
           }).join('') + '</tr>\n';
         });
         html += '</tbody></table>\n';
@@ -1215,7 +1245,8 @@ function buildHtml(voltFilter = null) {
   const allActiveItems = voltFilter ? allItems.filter(i => (i.voltage || 'Model Level') === voltFilter) : allItems;
   const counts = {};
   for (const item of allActiveItems) counts[item.status || 'Unknown'] = (counts[item.status || 'Unknown'] || 0) + 1;
-  const total    = allActiveItems.length;
+  const total      = allActiveItems.length;
+  const statusList = Object.keys(counts).sort();
   const subtitle = voltFilter ? `${voltFilter} Model` : 'All Models';
   const catOrder = ['Input', 'Main Output', 'Standby Output', 'Fan Output', 'Protections',
                     'Environmental / Reliability', 'Safety', 'EMC', 'PFC'];
@@ -1291,7 +1322,7 @@ function buildHtml(voltFilter = null) {
 
   // ── Cover ──────────────────────────────────────────────────────────────────
   body += `<div class="cover">
-    <div class="cover-product">GTM965500P</div>
+    <div class="cover-product">${PROJECT_NAME}</div>
     <div class="cover-report">Test Report</div>
     <div class="cover-model">${subtitle}</div>
     <div class="cover-org">GlobTek Engineering</div>
@@ -1303,22 +1334,15 @@ function buildHtml(voltFilter = null) {
   body += `<div class="section-card" id="summary">
   <div class="section-card-header">Test Summary</div>
   <div class="section-card-body">
-  <p class="meta-line"><strong>Project: GTM965500P &nbsp;|&nbsp; ${subtitle} &nbsp;|&nbsp; Total Test Items: ${total}</strong></p>
+  <p class="meta-line"><strong>Project: ${PROJECT_NAME} &nbsp;|&nbsp; ${subtitle} &nbsp;|&nbsp; Total Test Items: ${total}</strong></p>
   <table class="status-count-table">
     <thead><tr>
       <th>Status</th>
-      <th>OK / Resolved</th><th>For Review</th><th>Regression Req'd</th>
-      <th>In Progress</th><th>Has Issue</th><th>Clarification/Re-Test Req'd</th><th>Unknown</th>
+      ${statusList.map(s => `<th>${escHtml(s)}</th>`).join('')}
     </tr></thead>
     <tbody><tr>
       <td><strong>Count</strong></td>
-      <td class="cnt pass">${counts['OK / Resolved']||0}</td>
-      <td class="cnt review">${counts['Marked for review']||0}</td>
-      <td class="cnt regression">${counts["Regression Req'd"]||0}</td>
-      <td class="cnt progress">${counts['In Progress']||0}</td>
-      <td class="cnt issue">${counts['Has Issue']||0}</td>
-      <td class="cnt invalid">${counts["Clarification/Re-Test Req'd"]||0}</td>
-      <td class="cnt unknown">${counts['Unknown']||0}</td>
+      ${statusList.map(s => { const { bg, fg } = statusColors(s); return `<td style="background:#${bg};color:#${fg};font-weight:700">${counts[s]||0}</td>`; }).join('')}
     </tr></tbody>
   </table>`;
 
@@ -1634,8 +1658,8 @@ function buildHtml(voltFilter = null) {
 
     /* Inline markdown tables */
     .md-table { border-collapse:collapse; width:100%; margin:8px 0 10px; font-size:12px; }
-    .md-table th { background:#D6E4F0; color:#1F3864; padding:6px 10px; text-align:left; border:1px solid #bbb; font-weight:700; }
-    .md-table td { padding:6px 10px; border:1px solid #ccc; }
+    .md-table th { background:#D6E4F0; color:#1F3864; padding:6px 10px; text-align:center; border:1px solid #bbb; font-weight:700; vertical-align:middle; }
+    .md-table td { padding:6px 10px; border:1px solid #ccc; text-align:center; vertical-align:middle; }
     .md-table tr.row-odd  td { background:#F2F2F2; }
     .md-table tr.row-even td { background:#ffffff; }
 
@@ -1655,7 +1679,7 @@ function buildHtml(voltFilter = null) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GTM965500P Test Report — ${subtitle}</title>
+<title>${PROJECT_NAME} Test Report — ${subtitle}</title>
 <style>${css}</style>
 </head>
 <body>
@@ -1685,7 +1709,7 @@ async function main() {
     await writeDoc(fullDoc, OUTPUT_FILE);
   }
   if (MODE !== 'pdf') {
-    writeHtml(null, path.join(HTML_DIR, 'GTM965500P_Test_Report.html'));
+    writeHtml(null, path.join(HTML_DIR, `${PROJECT_NAME}_Test_Report.html`));
   }
 
   for (const volt of voltOrder) {
@@ -1694,12 +1718,12 @@ async function main() {
     const safeName = volt.replace(/\s+/g, '_');
     console.log(`\nBuilding ${volt} report...`);
     if (MODE !== 'html') {
-      const outPath = path.join(DOCX_DIR, `GTM965500P_Test_Report_${safeName}.docx`);
+      const outPath = path.join(DOCX_DIR, `${PROJECT_NAME}_Test_Report_${safeName}.docx`);
       const doc = await buildDoc(volt);
       await writeDoc(doc, outPath);
     }
     if (MODE !== 'pdf') {
-      writeHtml(volt, path.join(HTML_DIR, `GTM965500P_Test_Report_${safeName}.html`));
+      writeHtml(volt, path.join(HTML_DIR, `${PROJECT_NAME}_Test_Report_${safeName}.html`));
     }
   }
 
