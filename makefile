@@ -61,3 +61,7 @@ clean:
 	-rm -f $(RAW_JSON) $(PRETTY_JSON)
 	-rm -rf docx/ pdf/ .img_cache/ html/
 	@echo "Cleaned up"
+
+# for GlobTek use only
+upload:
+	printf "cd $(WEBSITE_PATH)\nput $(PWD)/$(REPORT_FILE_PATH) index.html\nbye\n" | sshpass -p "$(SFTP_PASS)" sftp -o StrictHostKeyChecking=no $(SFTP_USER)@$(SFTP_HOST)

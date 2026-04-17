@@ -6,6 +6,688 @@
                 "items": {
                     "nodes": [
                         {
+                            "id": "PVTI_lADOD_WuSc4BS4vIzgobuP0",
+                            "fieldValues": {
+                                "nodes": [
+                                    {},
+                                    {},
+                                    {
+                                        "text": "Remote-Sense (SNS)",
+                                        "field": {
+                                            "name": "Title"
+                                        }
+                                    },
+                                    {
+                                        "name": "Clarification/Re-Test Req'd",
+                                        "field": {
+                                            "name": "Status"
+                                        }
+                                    },
+                                    {
+                                        "name": "24V",
+                                        "field": {
+                                            "name": "Output Voltage"
+                                        }
+                                    },
+                                    {
+                                        "name": "Main Output",
+                                        "field": {
+                                            "name": "Category"
+                                        }
+                                    }
+                                ]
+                            },
+                            "content": {
+                                "number": 54,
+                                "title": "Remote-Sense (SNS)",
+                                "body": "**Spec:** Up to 500mV total cable-drop compensation, reverse and short circuit protected. Connect SNS+/SNS- leads to point-of-load with twisted pair wire. (Note 1)\n\n---\n\nAttach sufficiently long wires between the output and the load, which causes a voltage drop exceeding 250mV per wire @ 85% load current. (Rationale for 85%: When remote sense is used, output voltage and output power goes up, when tested with a constant current load. We do not specify operation at P_out>100% rating.)\n\nFor instance, the DCR of 1.5m of 12AWG wire is 0.0075ohm. For the 12V model, this yields a drop of 292mV per wire, or 584mV total. Different cable lengths shall be used for other voltage models.\n\n**Part A:**\n\n- Run at nominal line voltage (e.g. 115Vac) \n- Increase the set-point voltage to V_nom + 5% using the potentiometer.\n\n1. Leave the sense leads disconnected from the load. Measure the voltage at the power supply PCB @ 85% load.\n\n2. Connect the twisted-pair sense leads at the point-of-load (at the E-load terminals).\n\n3. Measure the voltage at the power supply PCB again @ 85% load. \n\nThe voltage at the PCB should have increased by at least 500mV. \n\n**Part B:**\n\n1. Detach the SNS leads, reverse the leads (connect SNS+ to -load terminal and SNS- to +load terminal). Check that there is no damage during and after.\n\n**Part C:**\n\n1. Detach the SNS leads and connect them to each other (short SNS+ to SNS-, alone). Check that there is no damage during and after.",
+                                "state": "OPEN",
+                                "labels": {
+                                    "nodes": [
+                                        {
+                                            "name": "GTM965500P"
+                                        }
+                                    ]
+                                },
+                                "comments": {
+                                    "nodes": [
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "**Part A**\n\n12AWG | ~6ft | Rwire = 0.013 Ohm\n85% load = 19.5A\n1. 25.3 V\n2. ..\n3. 25.67 V\n\n**Part B**\n\n1. When I connected the SNS- to +load, there was a spark between those two terminals and the supply OVP'd. On startup the output voltage goes to ~40V and OVP's.\n\n**Part C**\n1. ...",
+                                            "createdAt": "2026-04-07T14:19:28Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "The ZD7 TVS diode was removed previously for other rework troubleshooting\n\nWhen the SNS+ connection touched the negative output terminal, this create some large voltage spike that damaged RJ2\nRJ2 Failure Mode: open\n\nReplacing RJ2 with another 2.2Ohm resistor fixed the supply\n\nSolution: don't remove TVS diodes, we need them...\n\nI will finish SNS testing shortly",
+                                            "createdAt": "2026-04-08T16:52:49Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "[RESULT]\nPrevious issues were caused by broken/missing/incorrect TVS diodes for ZD6 and ZD7. Must be 54V zener (\"RE\" marking) for all voltage models.\n\n85% load = 19.5A\n\n### Part A\n| Step # | Voltage @ Supply | Voltage @ Load |\n|--------|--------|--------|\n| 1 | 25.2 V| 24.25 V | \n| 3 |  25.8 V | 24.9 V |\n\n\n### Part B - No damage\n| Voltage @ Supply | Voltage @ Load |\n|--------|--------|\n | 26.45 V| 25.5 V | \n\n### Part C - No damage\n| Voltage @ Supply | Voltage @ Load |\n|--------|--------|\n | 26.3 V | 25.5 V |\n\n",
+                                            "createdAt": "2026-04-13T17:15:45Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "lauxtim"
+                                            },
+                                            "body": "See: https://github.com/GlobTek-Engineering/GTM965500P/issues/55#issuecomment-4256097729",
+                                            "createdAt": "2026-04-15T22:34:29Z"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "id": "PVTI_lADOD_WuSc4BS4vIzgobuQM",
+                            "fieldValues": {
+                                "nodes": [
+                                    {},
+                                    {},
+                                    {},
+                                    {
+                                        "text": "Output Voltage Fine Adjustment",
+                                        "field": {
+                                            "name": "Title"
+                                        }
+                                    },
+                                    {
+                                        "name": "Marked for review",
+                                        "field": {
+                                            "name": "Status"
+                                        }
+                                    },
+                                    {
+                                        "name": "24V",
+                                        "field": {
+                                            "name": "Output Voltage"
+                                        }
+                                    },
+                                    {
+                                        "name": "Main Output",
+                                        "field": {
+                                            "name": "Category"
+                                        }
+                                    }
+                                ]
+                            },
+                            "content": {
+                                "number": 58,
+                                "title": "Output Voltage Fine Adjustment",
+                                "body": "**Spec:** Via potentiometer, \u00b15% adjustment range (Note 1)\n\n22.8V -> 25.2V\n\nRun at nominal line voltage (e.g. 115Vac)\n\nSense leads (SNS) disconnected.\n\nAdjust the potentiometer to minimum and maximum positions. Record the minimum and maximum output voltage, measured at the PCB.",
+                                "state": "OPEN",
+                                "labels": {
+                                    "nodes": [
+                                        {
+                                            "name": "GTM965500P"
+                                        }
+                                    ]
+                                },
+                                "comments": {
+                                    "nodes": [
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "[CHANGE]\nReq of Ra8, Ra9 and Ra11, Ra12 is 90.7kOhm\n\nRa8, Ra11 = 88.7kOhm\nRa9, Ra12 = 2kOhm\nRa14 = 16kOhm",
+                                            "createdAt": "2026-04-02T20:33:21Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "lauxtim"
+                                            },
+                                            "body": "@Vision314 Good, can you make a separate 'result' tag for the two voltage measurements after the change?\n\nAnd flag the \"Changes required\" field as \"Yes\"...although I guess that might be irrelevant if we are parsing and checking for the 'change' word",
+                                            "createdAt": "2026-04-16T21:08:18Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "[RESULT]\n\nOutput range: 22.8V -> 25.2V",
+                                            "createdAt": "2026-04-17T18:26:52Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "added !",
+                                            "createdAt": "2026-04-17T18:28:54Z"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "id": "PVTI_lADOD_WuSc4BS4vIzgobuM4",
+                            "fieldValues": {
+                                "nodes": [
+                                    {},
+                                    {},
+                                    {},
+                                    {
+                                        "text": "Turn-On Delay",
+                                        "field": {
+                                            "name": "Title"
+                                        }
+                                    },
+                                    {
+                                        "name": "Has Issue",
+                                        "field": {
+                                            "name": "Status"
+                                        }
+                                    },
+                                    {
+                                        "name": "24V",
+                                        "field": {
+                                            "name": "Output Voltage"
+                                        }
+                                    },
+                                    {
+                                        "name": "Main Output",
+                                        "field": {
+                                            "name": "Category"
+                                        }
+                                    }
+                                ]
+                            },
+                            "content": {
+                                "number": 32,
+                                "title": "Turn-On Delay",
+                                "body": "**Spec:** < 2 seconds @ 115Vac\n\nMeasure AC input voltage with differential probe, passive probe on DC output. Check the time between AC turn-on and DC turn-on, at full load.",
+                                "state": "OPEN",
+                                "labels": {
+                                    "nodes": [
+                                        {
+                                            "name": "GTM965500P"
+                                        }
+                                    ]
+                                },
+                                "comments": {
+                                    "nodes": [
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "[RESULT]\n239ms @ 22.9A\n\n<img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/7ea24ab2-16f8-4452-bcd3-f8ab45bfeb98\" />",
+                                            "createdAt": "2026-04-06T19:17:39Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "[RESULT]\n\n# GTSZ\n\n\n| Condition | Spec (mS) | Reading (mS) | Picture | Result |\n|------------|-----------|--------------|---------|--------|\n|  100Vac, 22.916A    | 2000      | 1150         |     <img width=\"482\" height=\"289\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/cc52140f-b77a-4ff7-805c-decb83982215\" />    | PASS   |\n| 240Vac, 22.916A    | 2000      | 710          |     <img width=\"495\" height=\"297\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/66559a5a-2693-4456-a276-1bb72705e811\" />    | PASS   |",
+                                            "createdAt": "2026-04-16T15:30:56Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "lauxtim"
+                                            },
+                                            "body": "@Vision314 \n> # GTSZ\n> Condition\tSpec (mS)\tReading (mS)\tResult\n> 100Vac, 22.916A\t2000\t1150\tPASS\n> 240Vac, 22.916A\t2000\t710\t\tPASS\n\nSuzhou's delays are much longer than expected. I suspect something is not quite right on Suzhou unit. The turn-on delays should be relatively constant regardless of output voltage. How do we mark this to let them know as an FYI?\n\nI marked as re-test/clarifiation req'd for now.\n",
+                                            "createdAt": "2026-04-16T20:54:10Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "I think it's better to mark this as has issue, and we can resolve it later",
+                                            "createdAt": "2026-04-17T18:25:04Z"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "id": "PVTI_lADOD_WuSc4BS4vIzgobuM0",
+                            "fieldValues": {
+                                "nodes": [
+                                    {},
+                                    {},
+                                    {},
+                                    {
+                                        "text": "Turn-On Delay",
+                                        "field": {
+                                            "name": "Title"
+                                        }
+                                    },
+                                    {
+                                        "name": "Marked for review",
+                                        "field": {
+                                            "name": "Status"
+                                        }
+                                    },
+                                    {
+                                        "name": "12V",
+                                        "field": {
+                                            "name": "Output Voltage"
+                                        }
+                                    },
+                                    {
+                                        "name": "Main Output",
+                                        "field": {
+                                            "name": "Category"
+                                        }
+                                    }
+                                ]
+                            },
+                            "content": {
+                                "number": 31,
+                                "title": "Turn-On Delay",
+                                "body": "**Spec:** < 2 seconds @ 115Vac\n\nMeasure AC input voltage with differential probe, passive probe on DC output. Check the time between AC turn-on and DC turn-on, at full load.",
+                                "state": "OPEN",
+                                "labels": {
+                                    "nodes": [
+                                        {
+                                            "name": "GTM965500P"
+                                        }
+                                    ]
+                                },
+                                "comments": {
+                                    "nodes": [
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "[RESULT]\n240ms @ 45.83A \n\n<img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/013b1c14-3529-4454-adda-e2886961d3f1\" />",
+                                            "createdAt": "2026-04-06T14:59:28Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "[RESULT]\n# GTSZ\n\n| Condition (Vac, A) | Spec (mS) | Reading (mS) | Picture |\n|-------------------|-----------|--------------|---------|\n| 100Vac, 45.83A    | 2000      | 276          | ![276ms @ 100Vac, 45.83A](https://github.com/user-attachments/assets/a72a6a36-60cd-44ac-bd8c-1dbc118e3c3a) |\n| 240Vac, 45.83A    | 2000      | 170          | ![170ms @ 240Vac, 45.83A](https://github.com/user-attachments/assets/c0d97730-9e88-49e2-9a0c-da77df5b5318) |",
+                                            "createdAt": "2026-04-16T15:39:59Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "lauxtim"
+                                            },
+                                            "body": "@Vision314 \nDelay is in milliseconds, FYI. \n\nSuzhou tested 100Vac and 240Vac. We only specified at 115Vac. If we are going to include their data, the 100Vac condition is more relevant. (240Vac attached above.)",
+                                            "createdAt": "2026-04-16T20:47:05Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "sounds good, added both",
+                                            "createdAt": "2026-04-17T18:28:33Z"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "id": "PVTI_lADOD_WuSc4BS4vIzgobuOs",
+                            "fieldValues": {
+                                "nodes": [
+                                    {},
+                                    {},
+                                    {},
+                                    {
+                                        "text": "Transient Response",
+                                        "field": {
+                                            "name": "Title"
+                                        }
+                                    },
+                                    {
+                                        "name": "Marked for review",
+                                        "field": {
+                                            "name": "Status"
+                                        }
+                                    },
+                                    {
+                                        "name": "54V",
+                                        "field": {
+                                            "name": "Output Voltage"
+                                        }
+                                    },
+                                    {
+                                        "name": "Main Output",
+                                        "field": {
+                                            "name": "Category"
+                                        }
+                                    }
+                                ]
+                            },
+                            "content": {
+                                "number": 45,
+                                "title": "Transient Response",
+                                "body": "**Spec:** \u00b1 5% deviation max. (with 50% load step), recovery to within \u00b11% within 1ms\n\nTaken at nominal input voltage (e.g. 115Vac)\n\nMeasure with ripple probe fixture PCB, Measure at power supply PCB. Measured with AC coupling.\n\nStep load + load dump:\n0 -> 25%\n25% -> 50%\n50 -> 75%\n75 -> 100%\n\n8 measurements total",
+                                "state": "OPEN",
+                                "labels": {
+                                    "nodes": [
+                                        {
+                                            "name": "GTM965500P"
+                                        }
+                                    ]
+                                },
+                                "comments": {
+                                    "nodes": [
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "[RESULT]\n\n1% = 540mV\n5% = 2.7V\n\n### Load Step\n| Transition | Deviation | Recovery Time |\n|-----------|----------|---------------|\n| 0A \u2192 2.5A | 400mV | Dev. <1% |\n| 2.5A \u2192 5.1A | 183mV | Dev. <1% |\n| 5.1A \u2192 7.65A | 223mV | Dev. <1% |\n| 7.65A \u2192 10.2A | 210mV | Dev. <1% |\n\n### Load Dump\n| Transition | Deviation | Recovery Time |\n|-----------|----------|---------------|\n| 0A \u2192 2.5A | 280mV | Dev. <1% |\n| 2.5A \u2192 5.1A |  200mV | Dev. <1% |\n| 5.1A \u2192 7.65A | 217mV | Dev. <1% |\n| 7.65A \u2192 10.2A | 237mV | Dev. <1% |\n\n---\n\n### Load Step\n| Load Step | Picture | Deviation | Recovery Time |\n|----------|--------|----------|---------------|\n| 0A \u2192 2.5A |<img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/1c5c4d77-8294-4cef-be17-59144ae72db6\" /> | 400mV | Dev. <1% |\n| 2.5A \u2192 5.1A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/9c1d5a56-adcc-4785-ba86-30d35b845745\" /> | 183mV | Dev. <1% |\n| 5.1A \u2192 7.65A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/800040bf-6fc8-4b49-8415-d4466e3f26a9\" /> | 223mV | Dev. <1% |\n| 7.65A \u2192 10.2A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/e2729bd5-4bbc-410c-91df-2b9bc243ca7d\" />| 210mV | Dev. <1% |\n---\n\n### Load Dump\n| Load Dump | Picture | Deviation | Recovery Time |\n|----------|--------|----------|---------------|\n| 0A \u2192 2.5A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/11d6ae4f-ae7a-4566-9e21-f75143f5bb15\" /> | 280mV | Dev. <1% |\n| 2.5A \u2192 5.1A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/38fb13e7-f625-43ef-8052-ca0f363226f3\" />| 200mV | Dev. <1% |\n| 5.1A \u2192 7.65A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/c37a8810-21a3-4b80-b6e8-e0d2f132509e\" />| 217mV | Dev. <1% |\n| 7.65A \u2192 10.2A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/91a404ac-4d83-424d-9d5d-9f33b1e234af\" />| 237mV | Dev. <1% |",
+                                            "createdAt": "2026-04-07T13:15:20Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "lauxtim"
+                                            },
+                                            "body": "See: https://github.com/GlobTek-Engineering/GTM965500P/issues/43#issuecomment-4247254592",
+                                            "createdAt": "2026-04-14T21:27:53Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "fixed !",
+                                            "createdAt": "2026-04-17T18:29:42Z"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "id": "PVTI_lADOD_WuSc4BS4vIzgobuNI",
+                            "fieldValues": {
+                                "nodes": [
+                                    {},
+                                    {},
+                                    {},
+                                    {
+                                        "text": "Turn-On Delay",
+                                        "field": {
+                                            "name": "Title"
+                                        }
+                                    },
+                                    {
+                                        "name": "Marked for review",
+                                        "field": {
+                                            "name": "Status"
+                                        }
+                                    },
+                                    {
+                                        "name": "54V",
+                                        "field": {
+                                            "name": "Output Voltage"
+                                        }
+                                    },
+                                    {
+                                        "name": "Main Output",
+                                        "field": {
+                                            "name": "Category"
+                                        }
+                                    }
+                                ]
+                            },
+                            "content": {
+                                "number": 33,
+                                "title": "Turn-On Delay",
+                                "body": "**Spec:** < 2 seconds @ 115Vac\n\nMeasure AC input voltage with differential probe, passive probe on DC output. Check the time between AC turn-on and DC turn-on, at full load.",
+                                "state": "OPEN",
+                                "labels": {
+                                    "nodes": [
+                                        {
+                                            "name": "GTM965500P"
+                                        }
+                                    ]
+                                },
+                                "comments": {
+                                    "nodes": [
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "[RESULT]\n277ms @ 10.2A\n\n<img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/fe115f6c-733b-492b-a97e-cf7ad6d042b0\" />",
+                                            "createdAt": "2026-04-06T20:23:32Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "lauxtim"
+                                            },
+                                            "body": "> [RESULT] 227ms @ 10.2A\n\nSince the delay is considerably less than 2 seconds, there's no concern. Turn on delay is the time between AC turn on and when the output reaches 100%  * V_out. I realize I did not explicitly write time to 100%, and DC turn-on could be interptetted as the moment the DC starts coming up. For rise-time, which is not this test, measured as the time it takes to rise from V_out * 10% to V_out * 90%. \n\nHere, the second cursor should have been about 50ms farther out, when output voltage reaches 100%.\n\nSuggest re-testing this one, or adding a note to the screenshot indicating cursor does not match up with actual delay, and then estimate the turn on delay by eye.\n\n",
+                                            "createdAt": "2026-04-16T20:44:58Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "sounds good, made a note of the estimated turn on delay in the screenshot and changed the result to +50ms, about right...",
+                                            "createdAt": "2026-04-17T18:30:17Z"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "id": "PVTI_lADOD_WuSc4BS4vIzgobuQQ",
+                            "fieldValues": {
+                                "nodes": [
+                                    {},
+                                    {},
+                                    {},
+                                    {
+                                        "text": "Output Voltage Fine Adjustment",
+                                        "field": {
+                                            "name": "Title"
+                                        }
+                                    },
+                                    {
+                                        "name": "Marked for review",
+                                        "field": {
+                                            "name": "Status"
+                                        }
+                                    },
+                                    {
+                                        "name": "54V",
+                                        "field": {
+                                            "name": "Output Voltage"
+                                        }
+                                    },
+                                    {
+                                        "name": "Main Output",
+                                        "field": {
+                                            "name": "Category"
+                                        }
+                                    }
+                                ]
+                            },
+                            "content": {
+                                "number": 59,
+                                "title": "Output Voltage Fine Adjustment",
+                                "body": "**Spec:** Via potentiometer, \u00b15% adjustment range (Note 1)\n\nRun at nominal line voltage (e.g. 115Vac)\n\nSense leads (SNS) disconnected.\n\nAdjust the potentiometer to minimum and maximum positions. Record the minimum and maximum output voltage, measured at the PCB.\n\n51.3V -> 56.7",
+                                "state": "OPEN",
+                                "labels": {
+                                    "nodes": [
+                                        {
+                                            "name": "GTM965500P"
+                                        }
+                                    ]
+                                },
+                                "comments": {
+                                    "nodes": [
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "[CHANGE]\nRa8, Ra11 = 200kOhm\nRa9, Ra12 = 4kOhm\nRa10, Ra13 = 10kOhm\n\nRa14 = 18kOhm",
+                                            "createdAt": "2026-04-06T14:26:53Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "lauxtim"
+                                            },
+                                            "body": "@Vision314 Good, can you make a separate 'result' tag for the two voltage measurements after the change?\n\nAnd flag the \"Changes required\" field as \"Yes\"...although I guess that might be irrelevant if we are parsing and checking for the 'change' word",
+                                            "createdAt": "2026-04-16T21:08:03Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "[RESULT]\n\nOutput range: 51.3V -> 56.7",
+                                            "createdAt": "2026-04-17T18:26:12Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "added the separate result and change tags\n\ni think it'll be more clear to just have \"changes\" and since they are already specified for a voltage model or a model level change, it will make sense when we look back at it in the future.",
+                                            "createdAt": "2026-04-17T18:31:49Z"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "id": "PVTI_lADOD_WuSc4BS4vIzgobuOc",
+                            "fieldValues": {
+                                "nodes": [
+                                    {},
+                                    {},
+                                    {},
+                                    {
+                                        "text": "Transient Response",
+                                        "field": {
+                                            "name": "Title"
+                                        }
+                                    },
+                                    {
+                                        "name": "Marked for review",
+                                        "field": {
+                                            "name": "Status"
+                                        }
+                                    },
+                                    {
+                                        "name": "12V",
+                                        "field": {
+                                            "name": "Output Voltage"
+                                        }
+                                    },
+                                    {
+                                        "name": "Main Output",
+                                        "field": {
+                                            "name": "Category"
+                                        }
+                                    }
+                                ]
+                            },
+                            "content": {
+                                "number": 44,
+                                "title": "Transient Response",
+                                "body": "**Spec:** \u00b1 5% deviation max. (with 50% load step), recovery to within \u00b11% within 1ms\n\nTaken at nominal input voltage (e.g. 115Vac)\n\nMeasure with ripple probe fixture PCB, Measure at power supply PCB. Measured with AC coupling.\n\nStep load + load dump:\n0 -> 25%\n25% -> 50%\n50 -> 75%\n75 -> 100%\n\n8 measurements total",
+                                "state": "OPEN",
+                                "labels": {
+                                    "nodes": [
+                                        {
+                                            "name": "GTM965500P"
+                                        }
+                                    ]
+                                },
+                                "comments": {
+                                    "nodes": [
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "[RESULT]\n\n### Load Step\n| Transition | Deviation | Recovery Time |\n|-----------|----------|---------------|\n| 0A \u2192 11.5A | 237mV | 0.2ms |\n| 11.5A \u2192 22.9A | 133mV | 0.2ms |\n| 22.9A \u2192 34.4A | 140mV | 0.2ms |\n| 34.4A \u2192 45.83A | 147mV | 0.2ms |\n\n#### Load Dump\n| Transition | Deviation | Recovery Time |\n|-----------|----------|---------------|\n| 11.5A \u2192 0A | 235mV | Dev. <1% |\n| 22.9A \u2192 11.5A | 123mV | Dev. <1% |\n| 34.4A \u2192 22.9A | 147.5mV | 0.1ms |\n| 45.83A \u2192 34.4A | 150mV | 0.2ms |\n\n---\n\n\n### Load Step\n| Load Step | Picture | Deviation | Recovery Time |\n|----------|--------|----------|---------------|\n| 0A \u2192 11.5A | <img src=\"https://github.com/user-attachments/assets/222fd30d-d097-4b6f-ac20-cd499d318d89\" width=\"800\" height=\"500\"> | 237mV | 0.2ms |\n| 11.5A \u2192 22.9A | <img src=\"https://github.com/user-attachments/assets/1208984d-2b74-4ccb-a63d-9fe5f72bd338\" width=\"800\" height=\"500\"> | 133mV | 0.2ms |\n| 22.9A \u2192 34.4A | <img src=\"https://github.com/user-attachments/assets/600e9692-003b-4df9-b1ea-a523686a6ffc\" width=\"800\" height=\"500\"> | 140mV | 0.2ms |\n| 34.4A \u2192 45.83A | <img src=\"https://github.com/user-attachments/assets/cc39f46b-cb9d-4f5d-9c1f-16c5d16a1026\" width=\"800\" height=\"500\"> | 147mV | 0.2ms |\n\n---\n\n### Load Dump\n| Load Dump | Picture | Deviation | Recovery Time |\n|----------|--------|----------|---------------|\n| 11.5A \u2192 0A | <img src=\"https://github.com/user-attachments/assets/e9df7678-cfb4-4016-8328-bae0e29f5a22\" width=\"800\" height=\"500\"> | 235mV | Dev. <1% |\n| 22.9A \u2192 11.5A | <img src=\"https://github.com/user-attachments/assets/2402d807-ede1-4c48-9086-96d9f65635e3\" width=\"800\" height=\"500\"> | 123mV | Dev. <1% |\n| 34.4A \u2192 22.9A | <img src=\"https://github.com/user-attachments/assets/a0c0ba57-6d1e-43b2-8534-84be14e7528e\" width=\"800\" height=\"500\"> | 147.5mV | 0.1ms |\n| 45.83A \u2192 34.4A | <img src=\"https://github.com/user-attachments/assets/9f2f5586-8592-4d2e-824c-14324e45db3d\" width=\"800\" height=\"500\"> | 150mV | 0.2ms |",
+                                            "createdAt": "2026-04-06T18:56:30Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "lauxtim"
+                                            },
+                                            "body": "@Vision314 See https://github.com/GlobTek-Engineering/GTM965500P/issues/43#issuecomment-4247254592",
+                                            "createdAt": "2026-04-14T21:27:43Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "fixed !",
+                                            "createdAt": "2026-04-17T18:28:42Z"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "id": "PVTI_lADOD_WuSc4BS4vIzgobuOg",
+                            "fieldValues": {
+                                "nodes": [
+                                    {},
+                                    {},
+                                    {},
+                                    {
+                                        "text": "Transient Response",
+                                        "field": {
+                                            "name": "Title"
+                                        }
+                                    },
+                                    {
+                                        "name": "Marked for review",
+                                        "field": {
+                                            "name": "Status"
+                                        }
+                                    },
+                                    {
+                                        "name": "24V",
+                                        "field": {
+                                            "name": "Output Voltage"
+                                        }
+                                    },
+                                    {
+                                        "name": "Main Output",
+                                        "field": {
+                                            "name": "Category"
+                                        }
+                                    }
+                                ]
+                            },
+                            "content": {
+                                "number": 43,
+                                "title": "Transient Response",
+                                "body": "**Spec:** \u00b1 5% deviation max. (with 50% load step), recovery to within \u00b11% within 1ms\n\nTaken at nominal input voltage (e.g. 115Vac)\n\nMeasure with ripple probe fixture PCB, Measure at power supply PCB. Measured with AC coupling.\n\nStep load + load dump:\n0 -> 25%\n25% -> 50%\n50 -> 75%\n75 -> 100%\n\n8 measurements total",
+                                "state": "OPEN",
+                                "labels": {
+                                    "nodes": [
+                                        {
+                                            "name": "GTM965500P"
+                                        }
+                                    ]
+                                },
+                                "comments": {
+                                    "nodes": [
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "[RESULT]\n### Load Step\n| Transition | Deviation | Recovery Time |\n|-----------|----------|---------------|\n| 0A \u2192 5.7A | 493mV | Dev. <1% |\n| 5.7A \u2192 11.5A | 248mV |  0.188ms  | \n| 11.5A \u2192 17.2A |  255mV |  0.188ms |\n| 17.2A \u2192 22.9A | 303mV | 0.187ms | \n\n### Load Dump\n| Transition | Deviation | Recovery Time |\n|-----------|----------|---------------|\n| 0A \u2192 5.7A | 220mv | Dev. <1% | \n| 5.7A \u2192 11.5A | 182mV | Dev. <1% | \n| 11.5A \u2192 17.2A |  181.7mV | Dev. <1%  | \n| 17.2A \u2192 22.9A | 207.5mV | Dev. <1%  | \n\n---\n1% = 240mV\n\n### Load Step\n| Load Step | Picture | Deviation | Recovery Time |\n|----------|--------|----------|---------------|\n| 0A \u2192 5.7A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/d375e051-b6d9-4093-92ae-b3053c4696b7\" />| 493mV | Dev. <1% |\n| 5.7A \u2192 11.5A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/ea5a35c9-b14f-44a8-87f2-9178fc9cacfc\" />| 248mV |  0.188ms |\n| 11.5A \u2192 17.2A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/dca2a955-381f-4376-8c43-5b6812512d11\" /> | 255mV |  0.188ms |\n| 17.2A \u2192 22.9A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/de1411c6-760a-45a5-8caa-fee42ec6fba7\" />| 303mV | 0.187ms |\n\n### Load Dump\n| Load Dump | Picture | Deviation | Recovery Time |\n|----------|--------|----------|---------------|\n| 0A \u2192 5.7A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/8a390285-16c4-4a1c-b4a5-2a5384c01bff\" /> | 220mv | Dev. <1% |\n| 5.7A \u2192 11.5A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/89cd045f-008f-436a-b394-1f73cf67afd7\" />| 182mV | Dev. <1% |\n| 11.5A \u2192 17.2A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/b3e87d46-b82b-4be5-9850-9c99fb32656d\" />| 181.7mV | Dev. <1% |\n| 17.2A \u2192 22.9A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/fadd909a-e3f3-4eb8-81dc-3d109b6785a1\" />| 207.5mV | Dev. <1% |",
+                                            "createdAt": "2026-04-06T20:14:08Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "lauxtim"
+                                            },
+                                            "body": "In reviewing the transient response for 12, 24V, and 54V, many times the peak deviation does not ever exceed the 1% recovery threshold, so the recovery time should probably be marked as \"N/A\" or \"Dev. < 1%\" for those items. (Cannot quantify how long it takes to recovery if it never deviated outside of our bounds to start with.) Above, all of the load **steps** exceed 1% deviation (240mV), so first we need to assess whether the peak deviation has exceeded the 5% max or not. (All OK.) Then, for those which have exceeded 1% deviation (but less than 5%), check how long it takes to recover to 1%. Seems like most are in the 200-300us range. Writing <1ms is OK as a pass/fail. For the future, you *could* record the actual recovery time.\n\nNo need to re-test, just update those which never deviated outside of 1% to \"Dev. < 1%\" or similar.\n\nAs a note:\n\nI'd probably set the cursors as follows:\n\nY(1): At peak of measured waveform (measured max deviation)\nY(2): At the 1% recovery threshold\nX(1): At t=0 (the moment the load step is applied)\nX(2): At the moment the voltage recovers to less than Y(2), the recovery threshold (measured recovery time)\n\n<img width=\"2285\" height=\"1054\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/74f2738e-b6d1-40dc-93b9-eb44f1356181\" />\n\nIt may make sense (in general, all types of tests), to present data with the specified limits presented in line. This way, you can easily see (at a glance) whether the spec is met or not, no need to scroll up or remember what the spec is.\n\n| Load Dump Condition | Picture | Max Deviation | Max Deviation (Spec) | Recovery Time | Recovery Time (Spec) |\n| ------------------- | ------- | ------------- | -------------------- | ------------- | -------------------- |\n|                     |         |               |                      |               |                      |\n|                     |         |               |                      |               |                      |\n|                     |         |               |                      |               |                      |\n\n",
+                                            "createdAt": "2026-04-14T21:26:42Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "fixed !",
+                                            "createdAt": "2026-04-17T18:29:35Z"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
                             "id": "PVTI_lADOD_WuSc4BS4vIzgobuP8",
                             "fieldValues": {
                                 "nodes": [
@@ -156,7 +838,7 @@
                                             "author": {
                                                 "login": "Vision314"
                                             },
-                                            "body": "[RESULT]\n\n85% load = 37.1A\n\n### Part A \u2014 Remote Sense Compensation\n\n| Condition              | V @ Supply | V @ Load | V_Cable Drop |\n| ---------------------- | :--------: | :------: | :----------: |\n| SNS Leads Disconnected | 12.6 V     | 11.72 V  | 0.88 V       |\n| SNS Leads Connected    | 13.3 V     | 12.37 V  | 0.93 V       |\n| | | | |\n| **V_Comp** \u00b9           | **700 mV** | \u2014        | \u2014            |\n| **V_Comp Spec**        | 500 mV min | \u2014        | \u2705 PASS      |\n\n\u00b9 V_Comp = V_Supply(connected) \u2212 V_Supply(disconnected)\n### Part B - No damage\n| Voltage @ Supply | Voltage @ Load |\n|--------|--------|\n | 13.7V| 12.8V | \n\n### Part C - No damage\n| Voltage @ Supply | Voltage @ Load |\n|--------|--------|\n | 13.7 V | 12.7 V |",
+                                            "body": "[RESULT]\n\n85% load = 37.1A\n\n### Part A \u2014 Remote Sense Compensation\n\n| Condition              | V @ Supply | V @ Load | V_Cable Drop |\n| ---------------------- | :--------: | :------: | :----------: |\n| SNS Leads Disconnected | 12.6 V     | 11.72 V  | 0.88 V       |\n| SNS Leads Connected    | 13.3 V     | 12.37 V  | 0.93 V       |\n| | | | |\n| **V_Comp** \u00b9           | **700 mV** | \u2014        | \u2014            |\n| **V_Comp Spec**        | 500 mV min | \u2014        | PASS      |\n\n\u00b9 V_Comp = V_Supply(connected) \u2212 V_Supply(disconnected)\n### Part B - No damage\n| Voltage @ Supply | Voltage @ Load |\n|--------|--------|\n | 13.7V| 12.8V | \n\n### Part C - No damage\n| Voltage @ Supply | Voltage @ Load |\n|--------|--------|\n | 13.7 V | 12.7 V |",
                                             "createdAt": "2026-04-16T21:02:53Z"
                                         }
                                     ]
@@ -888,7 +1570,7 @@
                                             "author": {
                                                 "login": "Vision314"
                                             },
-                                            "body": "[RESULT]\n85% load = 8.67A\n### Part A\n| Step # | Voltage @ Supply | Voltage @ Load |\n|--------|--------|--------|\n| 1 | 56.83 V| 56.12 V | \n| 3 | 57.3 V | 56.47 V |\n\n### Part B - No damage\n| Voltage @ Supply | Voltage @ Load |\n|--------|--------|\n | 58.16 V| 57.34V | \n\n### Part C - No damage\n| Voltage @ Supply | Voltage @ Load |\n|--------|--------|\n | 58V| 57.3V |\n",
+                                            "body": "85% load = 8.67A\n### Part A\n| Step # | Voltage @ Supply | Voltage @ Load |\n|--------|--------|--------|\n| 1 | 56.83 V| 56.12 V | \n| 3 | 57.3 V | 56.47 V |\n\n### Part B - No damage\n| Voltage @ Supply | Voltage @ Load |\n|--------|--------|\n | 58.16 V| 57.34V | \n\n### Part C - No damage\n| Voltage @ Supply | Voltage @ Load |\n|--------|--------|\n | 58V| 57.3V |\n",
                                             "createdAt": "2026-04-07T14:05:26Z"
                                         },
                                         {
@@ -911,6 +1593,13 @@
                                             },
                                             "body": "@Vision314 \n\n> > [RESULT] 85% load = 8.67A\n> > ### Part A\n> > Step #\tVoltage @ Supply\tVoltage @ Load\n> > 1\t56.83 V\t56.12 V\n> > 3\t57.3 V\t56.47 V\n> \n> 57.3 - 56.83V is 0.47V, which means the remote sense circuit added 470mV to the output voltage, which is still short of 500mV. Question is whether the wire resistance is still too low or if it is indeed limited to ~470mV of added compensation.\n\nActually, we have all the information we need. I apparently just got lost interpreting the data the other day. \n\n| Step # | Voltage @ Supply | Voltage @ Load | V_Cable drop |\n| ------ | ---------------- | -------------- | ------------ |\n| 1      | 56.83V            | 56.12 V        | 0.71V        |\n| 3      | 57.3 V           | 56.47 V        |              |\n| V_Comp | 0.47V            |                |              |\n| Spec   | 0.50V (min.)     |                |              |\n\nThe cable/resistor is producing 0.71V of natural drop, but the SNS circuit is only compensating/adding an addition 470mV. Can you double check that Da1 and Da2 (on the regulation board) are the same type as on the 12V and 24V? We didn't happen to swap those out before, right?\n\nIt could just be that we are inherently limited at 57.3V due to LLC limitation @ 85% load? Try repeating this test at ~95% load. If the voltage at the supply does not reach 57.3V as it did at 85% load, maybe the LLC has run out of gain and so its inherently limited.\n\nMaybe an interesting point for units running below the resonant frequency (i.e. not a multiple of 12V). They are already operating under boost gain (up the LLC gain curve, to the left of the resonant frequency), so they might not have much boost left.",
                                             "createdAt": "2026-04-15T22:45:06Z"
+                                        },
+                                        {
+                                            "author": {
+                                                "login": "Vision314"
+                                            },
+                                            "body": "[RESULT]\n\n85% load = 8.67A\n### Part A \u2014 Remote Sense Compensation\n| Condition              | V @ Supply | V @ Load |  V_Cable Drop |\n| ---------------------- | :--------: | :------: | :-----------: |\n| SNS Leads Disconnected | 56.83 V    | 56.12 V  | 0.71 V        |\n| SNS Leads Connected    | 57.3 V     | 56.47 V  | 0.83 V        |\n| | | | |\n| **V_Comp** \u00b9           | **470 mV** | \u2014        | \u2014             |\n| **V_Comp Spec**        | 500 mV min | \u2014        | FAIL          |\n\n\u00b9 V_Comp = V_Supply(connected) \u2212 V_Supply(disconnected)\n### Part B - No damage\n| Voltage @ Supply | Voltage @ Load |\n|------------------|----------------|\n| 58.16 V          | 57.34 V        |\n### Part C - No damage\n| Voltage @ Supply | Voltage @ Load |\n|------------------|----------------|\n| 58 V             | 57.3 V         |",
+                                            "createdAt": "2026-04-17T18:48:34Z"
                                         }
                                     ]
                                 }
@@ -976,71 +1665,6 @@
                                             },
                                             "body": "@Vision314 \n\nGood. For the future, I would include all spurious parts of the waveform as part determining the ripple. I know 95% of the waveform falls within the bounds you show, but it's still a bit subjective. \n\nWe are very far away from the limit here so it's not really an issue.\n\n<img width=\"546\" height=\"193\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/0fe104aa-f52c-4eea-aa90-cbfe36a80cf2\" />",
                                             "createdAt": "2026-04-14T20:34:42Z"
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            "id": "PVTI_lADOD_WuSc4BS4vIzgobuOs",
-                            "fieldValues": {
-                                "nodes": [
-                                    {},
-                                    {},
-                                    {},
-                                    {
-                                        "text": "Transient Response",
-                                        "field": {
-                                            "name": "Title"
-                                        }
-                                    },
-                                    {
-                                        "name": "Clarification/Re-Test Req'd",
-                                        "field": {
-                                            "name": "Status"
-                                        }
-                                    },
-                                    {
-                                        "name": "54V",
-                                        "field": {
-                                            "name": "Output Voltage"
-                                        }
-                                    },
-                                    {
-                                        "name": "Main Output",
-                                        "field": {
-                                            "name": "Category"
-                                        }
-                                    }
-                                ]
-                            },
-                            "content": {
-                                "number": 45,
-                                "title": "Transient Response",
-                                "body": "**Spec:** \u00b1 5% deviation max. (with 50% load step), recovery to within \u00b11% within 1ms\n\nTaken at nominal input voltage (e.g. 115Vac)\n\nMeasure with ripple probe fixture PCB, Measure at power supply PCB. Measured with AC coupling.\n\nStep load + load dump:\n0 -> 25%\n25% -> 50%\n50 -> 75%\n75 -> 100%\n\n8 measurements total",
-                                "state": "OPEN",
-                                "labels": {
-                                    "nodes": [
-                                        {
-                                            "name": "GTM965500P"
-                                        }
-                                    ]
-                                },
-                                "comments": {
-                                    "nodes": [
-                                        {
-                                            "author": {
-                                                "login": "Vision314"
-                                            },
-                                            "body": "[RESULT]\n\n1% = 540mV\n5% = 2.7V\n\n### Load Step\n| Transition | Deviation | Recovery Time |\n|-----------|----------|---------------|\n| 0A \u2192 2.5A | 400mV | <1ms |\n| 2.5A \u2192 5.1A | 183mV | 1ms |\n| 5.1A \u2192 7.65A | 223mV | <1ms |\n| 7.65A \u2192 10.2A | 210mV | <1ms |\n\n### Load Dump\n| Transition | Deviation | Recovery Time |\n|-----------|----------|---------------|\n| 0A \u2192 2.5A | 280mV | 1ms |\n| 2.5A \u2192 5.1A |  200mV | <1ms |\n| 5.1A \u2192 7.65A | 217mV | <1ms |\n| 7.65A \u2192 10.2A | 237mV | <1ms |\n\n---\n\n### Load Step\n| Load Step | Picture | Deviation | Recovery Time |\n|----------|--------|----------|---------------|\n| 0A \u2192 2.5A |<img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/1c5c4d77-8294-4cef-be17-59144ae72db6\" /> | 400mV | <1ms |\n| 2.5A \u2192 5.1A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/9c1d5a56-adcc-4785-ba86-30d35b845745\" /> | 183mV | 1ms |\n| 5.1A \u2192 7.65A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/800040bf-6fc8-4b49-8415-d4466e3f26a9\" /> | 223mV | <1ms |\n| 7.65A \u2192 10.2A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/e2729bd5-4bbc-410c-91df-2b9bc243ca7d\" />| 210mV | <1ms |\n---\n\n### Load Dump\n| Load Dump | Picture | Deviation | Recovery Time |\n|----------|--------|----------|---------------|\n| 0A \u2192 2.5A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/11d6ae4f-ae7a-4566-9e21-f75143f5bb15\" /> | 280mV | 1ms |\n| 2.5A \u2192 5.1A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/38fb13e7-f625-43ef-8052-ca0f363226f3\" />| 200mV | <1ms |\n| 5.1A \u2192 7.65A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/c37a8810-21a3-4b80-b6e8-e0d2f132509e\" />| 217mV | <1ms |\n| 7.65A \u2192 10.2A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/91a404ac-4d83-424d-9d5d-9f33b1e234af\" />| 237mV | <1ms |",
-                                            "createdAt": "2026-04-07T13:15:20Z"
-                                        },
-                                        {
-                                            "author": {
-                                                "login": "lauxtim"
-                                            },
-                                            "body": "See: https://github.com/GlobTek-Engineering/GTM965500P/issues/43#issuecomment-4247254592",
-                                            "createdAt": "2026-04-14T21:27:53Z"
                                         }
                                     ]
                                 }
@@ -1375,71 +1999,6 @@
                             }
                         },
                         {
-                            "id": "PVTI_lADOD_WuSc4BS4vIzgobuQM",
-                            "fieldValues": {
-                                "nodes": [
-                                    {},
-                                    {},
-                                    {},
-                                    {
-                                        "text": "Output Voltage Fine Adjustment",
-                                        "field": {
-                                            "name": "Title"
-                                        }
-                                    },
-                                    {
-                                        "name": "Clarification/Re-Test Req'd",
-                                        "field": {
-                                            "name": "Status"
-                                        }
-                                    },
-                                    {
-                                        "name": "24V",
-                                        "field": {
-                                            "name": "Output Voltage"
-                                        }
-                                    },
-                                    {
-                                        "name": "Main Output",
-                                        "field": {
-                                            "name": "Category"
-                                        }
-                                    }
-                                ]
-                            },
-                            "content": {
-                                "number": 58,
-                                "title": "Output Voltage Fine Adjustment",
-                                "body": "**Spec:** Via potentiometer, \u00b15% adjustment range (Note 1)\n\n22.8V -> 25.2V\n\nRun at nominal line voltage (e.g. 115Vac)\n\nSense leads (SNS) disconnected.\n\nAdjust the potentiometer to minimum and maximum positions. Record the minimum and maximum output voltage, measured at the PCB.",
-                                "state": "OPEN",
-                                "labels": {
-                                    "nodes": [
-                                        {
-                                            "name": "GTM965500P"
-                                        }
-                                    ]
-                                },
-                                "comments": {
-                                    "nodes": [
-                                        {
-                                            "author": {
-                                                "login": "Vision314"
-                                            },
-                                            "body": "[CHANGE]\nReq of Ra8, Ra9 and Ra11, Ra12 is 90.7kOhm\n\nRa8, Ra11 = 88.7kOhm\nRa9, Ra12 = 2kOhm\nRa14 = 16kOhm\n\nOutput range: 22.8V -> 25.2V",
-                                            "createdAt": "2026-04-02T20:33:21Z"
-                                        },
-                                        {
-                                            "author": {
-                                                "login": "lauxtim"
-                                            },
-                                            "body": "@Vision314 Good, can you make a separate 'result' tag for the two voltage measurements after the change?\n\nAnd flag the \"Changes required\" field as \"Yes\"...although I guess that might be irrelevant if we are parsing and checking for the 'change' word",
-                                            "createdAt": "2026-04-16T21:08:18Z"
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        {
                             "id": "PVTI_lADOD_WuSc4BS4vIzgocGhM",
                             "fieldValues": {
                                 "nodes": [
@@ -1728,71 +2287,6 @@
                             }
                         },
                         {
-                            "id": "PVTI_lADOD_WuSc4BS4vIzgobuOc",
-                            "fieldValues": {
-                                "nodes": [
-                                    {},
-                                    {},
-                                    {},
-                                    {
-                                        "text": "Transient Response",
-                                        "field": {
-                                            "name": "Title"
-                                        }
-                                    },
-                                    {
-                                        "name": "Clarification/Re-Test Req'd",
-                                        "field": {
-                                            "name": "Status"
-                                        }
-                                    },
-                                    {
-                                        "name": "12V",
-                                        "field": {
-                                            "name": "Output Voltage"
-                                        }
-                                    },
-                                    {
-                                        "name": "Main Output",
-                                        "field": {
-                                            "name": "Category"
-                                        }
-                                    }
-                                ]
-                            },
-                            "content": {
-                                "number": 44,
-                                "title": "Transient Response",
-                                "body": "**Spec:** \u00b1 5% deviation max. (with 50% load step), recovery to within \u00b11% within 1ms\n\nTaken at nominal input voltage (e.g. 115Vac)\n\nMeasure with ripple probe fixture PCB, Measure at power supply PCB. Measured with AC coupling.\n\nStep load + load dump:\n0 -> 25%\n25% -> 50%\n50 -> 75%\n75 -> 100%\n\n8 measurements total",
-                                "state": "OPEN",
-                                "labels": {
-                                    "nodes": [
-                                        {
-                                            "name": "GTM965500P"
-                                        }
-                                    ]
-                                },
-                                "comments": {
-                                    "nodes": [
-                                        {
-                                            "author": {
-                                                "login": "Vision314"
-                                            },
-                                            "body": "[RESULT]\n\n### Load Step\n| Transition | Deviation | Recovery Time |\n|-----------|----------|---------------|\n| 0A \u2192 11.5A | 237mV | 1ms |\n| 11.5A \u2192 22.9A | 133mV | <1ms |\n| 22.9A \u2192 34.4A | 140mV | <1ms |\n| 34.4A \u2192 45.83A | 147mV | <1ms |\n\n#### Load Dump\n| Transition | Deviation | Recovery Time |\n|-----------|----------|---------------|\n| 11.5A \u2192 0A | 235mV | 204ms |\n| 22.9A \u2192 11.5A | 123mV | <1ms |\n| 34.4A \u2192 22.9A | 147.5mV | <1ms |\n| 45.83A \u2192 34.4A | 150mV | <1ms |\n\n---\n\n\n### Load Step\n| Load Step | Picture | Deviation | Recovery Time |\n|----------|--------|----------|---------------|\n| 0A \u2192 11.5A | <img src=\"https://github.com/user-attachments/assets/222fd30d-d097-4b6f-ac20-cd499d318d89\" width=\"800\" height=\"500\"> | 237mV | 1ms |\n| 11.5A \u2192 22.9A | <img src=\"https://github.com/user-attachments/assets/1208984d-2b74-4ccb-a63d-9fe5f72bd338\" width=\"800\" height=\"500\"> | 133mV | <1ms |\n| 22.9A \u2192 34.4A | <img src=\"https://github.com/user-attachments/assets/600e9692-003b-4df9-b1ea-a523686a6ffc\" width=\"800\" height=\"500\"> | 140mV | <1ms |\n| 34.4A \u2192 45.83A | <img src=\"https://github.com/user-attachments/assets/cc39f46b-cb9d-4f5d-9c1f-16c5d16a1026\" width=\"800\" height=\"500\"> | 147mV | <1ms |\n\n---\n\n### Load Dump\n| Load Dump | Picture | Deviation | Recovery Time |\n|----------|--------|----------|---------------|\n| 11.5A \u2192 0A | <img src=\"https://github.com/user-attachments/assets/e9df7678-cfb4-4016-8328-bae0e29f5a22\" width=\"800\" height=\"500\"> | 235mV | 204ms |\n| 22.9A \u2192 11.5A | <img src=\"https://github.com/user-attachments/assets/2402d807-ede1-4c48-9086-96d9f65635e3\" width=\"800\" height=\"500\"> | 123mV | <1ms |\n| 34.4A \u2192 22.9A | <img src=\"https://github.com/user-attachments/assets/a0c0ba57-6d1e-43b2-8534-84be14e7528e\" width=\"800\" height=\"500\"> | 147.5mV | <1ms |\n| 45.83A \u2192 34.4A | <img src=\"https://github.com/user-attachments/assets/9f2f5586-8592-4d2e-824c-14324e45db3d\" width=\"800\" height=\"500\"> | 150mV | <1ms |",
-                                            "createdAt": "2026-04-06T18:56:30Z"
-                                        },
-                                        {
-                                            "author": {
-                                                "login": "lauxtim"
-                                            },
-                                            "body": "@Vision314 See https://github.com/GlobTek-Engineering/GTM965500P/issues/43#issuecomment-4247254592",
-                                            "createdAt": "2026-04-14T21:27:43Z"
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        {
                             "id": "PVTI_lADOD_WuSc4BS4vIzgobuNA",
                             "fieldValues": {
                                 "nodes": [
@@ -1852,78 +2346,6 @@
                                             },
                                             "body": "[RESULT]\n\n# GTSZ\n| Input Voltage | 12V   | Load (A) | Test Result |\n|---------------|-------|----------|-------------|\n| 90            | 12.06 | 0        | PASS        |\n|               | 12    | 11.46    | PASS        |\n|               | 12    | 22.92    | PASS        |\n|               | 11.98 | 34.37    | PASS        |\n|               | 11.98 | 45.83    | PASS        |\n| 115           | 12.06 | 0        | PASS        |\n|               | 12    | 11.46    | PASS        |\n|               | 11.99 | 22.92    | PASS        |\n|               | 11.98 | 34.37    | PASS        |\n|               | 11.98 | 45.83    | PASS        |\n| 230           | 12.06 | 0        | PASS        |\n|               | 12    | 11.46    | PASS        |\n|               | 12    | 22.92    | PASS        |\n|               | 11.98 | 34.37    | PASS        |\n|               | 11.98 | 45.83    | PASS        |\n| 264           | 12.06 | 0        | PASS        |\n|               | 12    | 11.46    | PASS        |\n|               | 12    | 22.92    | PASS        |\n|               | 11.98 | 34.37    | PASS        |\n|               | 11.98 | 45.83    | PASS        |",
                                             "createdAt": "2026-04-16T15:07:11Z"
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            "id": "PVTI_lADOD_WuSc4BS4vIzgobuM0",
-                            "fieldValues": {
-                                "nodes": [
-                                    {},
-                                    {},
-                                    {},
-                                    {
-                                        "text": "Turn-On Delay",
-                                        "field": {
-                                            "name": "Title"
-                                        }
-                                    },
-                                    {
-                                        "name": "Clarification/Re-Test Req'd",
-                                        "field": {
-                                            "name": "Status"
-                                        }
-                                    },
-                                    {
-                                        "name": "12V",
-                                        "field": {
-                                            "name": "Output Voltage"
-                                        }
-                                    },
-                                    {
-                                        "name": "Main Output",
-                                        "field": {
-                                            "name": "Category"
-                                        }
-                                    }
-                                ]
-                            },
-                            "content": {
-                                "number": 31,
-                                "title": "Turn-On Delay",
-                                "body": "**Spec:** < 2 seconds @ 115Vac\n\nMeasure AC input voltage with differential probe, passive probe on DC output. Check the time between AC turn-on and DC turn-on, at full load.",
-                                "state": "OPEN",
-                                "labels": {
-                                    "nodes": [
-                                        {
-                                            "name": "GTM965500P"
-                                        }
-                                    ]
-                                },
-                                "comments": {
-                                    "nodes": [
-                                        {
-                                            "author": {
-                                                "login": "Vision314"
-                                            },
-                                            "body": "[RESULT]\n240ms @ 45.83A \n\n<img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/013b1c14-3529-4454-adda-e2886961d3f1\" />",
-                                            "createdAt": "2026-04-06T14:59:28Z"
-                                        },
-                                        {
-                                            "author": {
-                                                "login": "Vision314"
-                                            },
-                                            "body": "[RESULT]\n\n# GTSZ\n170ns @ 240Vac, 45.83A\n<img width=\"489\" height=\"292\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/c0d97730-9e88-49e2-9a0c-da77df5b5318\" />\n",
-                                            "createdAt": "2026-04-16T15:39:59Z"
-                                        },
-                                        {
-                                            "author": {
-                                                "login": "lauxtim"
-                                            },
-                                            "body": "@Vision314 \nDelay is in milliseconds, FYI. \n\nSuzhou tested 100Vac and 240Vac. We only specified at 115Vac. If we are going to include their data, the 100Vac condition is more relevant. (240Vac attached above.)",
-                                            "createdAt": "2026-04-16T20:47:05Z"
                                         }
                                     ]
                                 }
@@ -2113,221 +2535,6 @@
                             }
                         },
                         {
-                            "id": "PVTI_lADOD_WuSc4BS4vIzgobuP0",
-                            "fieldValues": {
-                                "nodes": [
-                                    {},
-                                    {},
-                                    {
-                                        "text": "Remote-Sense (SNS)",
-                                        "field": {
-                                            "name": "Title"
-                                        }
-                                    },
-                                    {
-                                        "name": "Clarification/Re-Test Req'd",
-                                        "field": {
-                                            "name": "Status"
-                                        }
-                                    },
-                                    {
-                                        "name": "24V",
-                                        "field": {
-                                            "name": "Output Voltage"
-                                        }
-                                    },
-                                    {
-                                        "name": "Main Output",
-                                        "field": {
-                                            "name": "Category"
-                                        }
-                                    }
-                                ]
-                            },
-                            "content": {
-                                "number": 54,
-                                "title": "Remote-Sense (SNS)",
-                                "body": "**Spec:** Up to 500mV total cable-drop compensation, reverse and short circuit protected. Connect SNS+/SNS- leads to point-of-load with twisted pair wire. (Note 1)\n\n---\n\nAttach sufficiently long wires between the output and the load, which causes a voltage drop exceeding 250mV per wire @ 85% load current. (Rationale for 85%: When remote sense is used, output voltage and output power goes up, when tested with a constant current load. We do not specify operation at P_out>100% rating.)\n\nFor instance, the DCR of 1.5m of 12AWG wire is 0.0075ohm. For the 12V model, this yields a drop of 292mV per wire, or 584mV total. Different cable lengths shall be used for other voltage models.\n\n**Part A:**\n\n- Run at nominal line voltage (e.g. 115Vac) \n- Increase the set-point voltage to V_nom + 5% using the potentiometer.\n\n1. Leave the sense leads disconnected from the load. Measure the voltage at the power supply PCB @ 85% load.\n\n2. Connect the twisted-pair sense leads at the point-of-load (at the E-load terminals).\n\n3. Measure the voltage at the power supply PCB again @ 85% load. \n\nThe voltage at the PCB should have increased by at least 500mV. \n\n**Part B:**\n\n1. Detach the SNS leads, reverse the leads (connect SNS+ to -load terminal and SNS- to +load terminal). Check that there is no damage during and after.\n\n**Part C:**\n\n1. Detach the SNS leads and connect them to each other (short SNS+ to SNS-, alone). Check that there is no damage during and after.",
-                                "state": "OPEN",
-                                "labels": {
-                                    "nodes": [
-                                        {
-                                            "name": "GTM965500P"
-                                        }
-                                    ]
-                                },
-                                "comments": {
-                                    "nodes": [
-                                        {
-                                            "author": {
-                                                "login": "Vision314"
-                                            },
-                                            "body": "**Part A**\n\n12AWG | ~6ft | Rwire = 0.013 Ohm\n85% load = 19.5A\n1. 25.3 V\n2. ..\n3. 25.67 V\n\n**Part B**\n\n1. When I connected the SNS- to +load, there was a spark between those two terminals and the supply OVP'd. On startup the output voltage goes to ~40V and OVP's.\n\n**Part C**\n1. ...",
-                                            "createdAt": "2026-04-07T14:19:28Z"
-                                        },
-                                        {
-                                            "author": {
-                                                "login": "Vision314"
-                                            },
-                                            "body": "The ZD7 TVS diode was removed previously for other rework troubleshooting\n\nWhen the SNS+ connection touched the negative output terminal, this create some large voltage spike that damaged RJ2\nRJ2 Failure Mode: open\n\nReplacing RJ2 with another 2.2Ohm resistor fixed the supply\n\nSolution: don't remove TVS diodes, we need them...\n\nI will finish SNS testing shortly",
-                                            "createdAt": "2026-04-08T16:52:49Z"
-                                        },
-                                        {
-                                            "author": {
-                                                "login": "Vision314"
-                                            },
-                                            "body": "[RESULT]\nPrevious issues were caused by broken/missing/incorrect TVS diodes for ZD6 and ZD7. Must be 54V zener (\"RE\" marking) for all voltage models.\n\n85% load = 19.5A\n\n### Part A\n| Step # | Voltage @ Supply | Voltage @ Load |\n|--------|--------|--------|\n| 1 | 25.2 V| 24.25 V | \n| 3 |  25.8 V | 24.9 V |\n\n\n### Part B - No damage\n| Voltage @ Supply | Voltage @ Load |\n|--------|--------|\n | 26.45 V| 25.5 V | \n\n### Part C - No damage\n| Voltage @ Supply | Voltage @ Load |\n|--------|--------|\n | 26.3 V | 25.5 V |\n\n",
-                                            "createdAt": "2026-04-13T17:15:45Z"
-                                        },
-                                        {
-                                            "author": {
-                                                "login": "lauxtim"
-                                            },
-                                            "body": "See: https://github.com/GlobTek-Engineering/GTM965500P/issues/55#issuecomment-4256097729",
-                                            "createdAt": "2026-04-15T22:34:29Z"
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            "id": "PVTI_lADOD_WuSc4BS4vIzgobuOg",
-                            "fieldValues": {
-                                "nodes": [
-                                    {},
-                                    {},
-                                    {},
-                                    {
-                                        "text": "Transient Response",
-                                        "field": {
-                                            "name": "Title"
-                                        }
-                                    },
-                                    {
-                                        "name": "Clarification/Re-Test Req'd",
-                                        "field": {
-                                            "name": "Status"
-                                        }
-                                    },
-                                    {
-                                        "name": "24V",
-                                        "field": {
-                                            "name": "Output Voltage"
-                                        }
-                                    },
-                                    {
-                                        "name": "Main Output",
-                                        "field": {
-                                            "name": "Category"
-                                        }
-                                    }
-                                ]
-                            },
-                            "content": {
-                                "number": 43,
-                                "title": "Transient Response",
-                                "body": "**Spec:** \u00b1 5% deviation max. (with 50% load step), recovery to within \u00b11% within 1ms\n\nTaken at nominal input voltage (e.g. 115Vac)\n\nMeasure with ripple probe fixture PCB, Measure at power supply PCB. Measured with AC coupling.\n\nStep load + load dump:\n0 -> 25%\n25% -> 50%\n50 -> 75%\n75 -> 100%\n\n8 measurements total",
-                                "state": "OPEN",
-                                "labels": {
-                                    "nodes": [
-                                        {
-                                            "name": "GTM965500P"
-                                        }
-                                    ]
-                                },
-                                "comments": {
-                                    "nodes": [
-                                        {
-                                            "author": {
-                                                "login": "Vision314"
-                                            },
-                                            "body": "[RESULT]\n### Load Step\n| Transition | Deviation | Recovery Time |\n|-----------|----------|---------------|\n| 0A \u2192 5.7A | 493mV | <1ms |\n| 5.7A \u2192 11.5A | 248mV |  <1ms  | \n| 11.5A \u2192 17.2A |  255mV |  <1ms |\n| 17.2A \u2192 22.9A | 303mV | <1ms | \n\n### Load Dump\n| Transition | Deviation | Recovery Time |\n|-----------|----------|---------------|\n| 0A \u2192 5.7A | 220mv | <1ms | \n| 5.7A \u2192 11.5A | 182mV | <1ms | \n| 11.5A \u2192 17.2A |  181.7mV | <1ms  | \n| 17.2A \u2192 22.9A | 207.5mV | <1ms  | \n\n---\n1% = 240mV\n\n### Load Step\n| Load Step | Picture | Deviation | Recovery Time |\n|----------|--------|----------|---------------|\n| 0A \u2192 5.7A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/d375e051-b6d9-4093-92ae-b3053c4696b7\" />| 493mV | <1ms |\n| 5.7A \u2192 11.5A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/ea5a35c9-b14f-44a8-87f2-9178fc9cacfc\" />| 248mV |  <1ms |\n| 11.5A \u2192 17.2A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/dca2a955-381f-4376-8c43-5b6812512d11\" /> | 255mV |  <1ms |\n| 17.2A \u2192 22.9A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/de1411c6-760a-45a5-8caa-fee42ec6fba7\" />| 303mV | <1ms |\n\n### Load Dump\n| Load Dump | Picture | Deviation | Recovery Time |\n|----------|--------|----------|---------------|\n| 0A \u2192 5.7A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/8a390285-16c4-4a1c-b4a5-2a5384c01bff\" /> | 220mv | <1ms |\n| 5.7A \u2192 11.5A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/89cd045f-008f-436a-b394-1f73cf67afd7\" />| 182mV | <1ms |\n| 11.5A \u2192 17.2A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/b3e87d46-b82b-4be5-9850-9c99fb32656d\" />| 181.7mV | <1ms |\n| 17.2A \u2192 22.9A | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/fadd909a-e3f3-4eb8-81dc-3d109b6785a1\" />| 207.5mV | <1ms |",
-                                            "createdAt": "2026-04-06T20:14:08Z"
-                                        },
-                                        {
-                                            "author": {
-                                                "login": "lauxtim"
-                                            },
-                                            "body": "In reviewing the transient response for 12, 24V, and 54V, many times the peak deviation does not ever exceed the 1% recovery threshold, so the recovery time should probably be marked as \"N/A\" or \"Dev. < 1%\" for those items. (Cannot quantify how long it takes to recovery if it never deviated outside of our bounds to start with.) Above, all of the load **steps** exceed 1% deviation (240mV), so first we need to assess whether the peak deviation has exceeded the 5% max or not. (All OK.) Then, for those which have exceeded 1% deviation (but less than 5%), check how long it takes to recover to 1%. Seems like most are in the 200-300us range. Writing <1ms is OK as a pass/fail. For the future, you *could* record the actual recovery time.\n\nNo need to re-test, just update those which never deviated outside of 1% to \"Dev. < 1%\" or similar.\n\nAs a note:\n\nI'd probably set the cursors as follows:\n\nY(1): At peak of measured waveform (measured max deviation)\nY(2): At the 1% recovery threshold\nX(1): At t=0 (the moment the load step is applied)\nX(2): At the moment the voltage recovers to less than Y(2), the recovery threshold (measured recovery time)\n\n<img width=\"2285\" height=\"1054\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/74f2738e-b6d1-40dc-93b9-eb44f1356181\" />\n\nIt may make sense (in general, all types of tests), to present data with the specified limits presented in line. This way, you can easily see (at a glance) whether the spec is met or not, no need to scroll up or remember what the spec is.\n\n| Load Dump Condition | Picture | Max Deviation | Max Deviation (Spec) | Recovery Time | Recovery Time (Spec) |\n| ------------------- | ------- | ------------- | -------------------- | ------------- | -------------------- |\n|                     |         |               |                      |               |                      |\n|                     |         |               |                      |               |                      |\n|                     |         |               |                      |               |                      |\n\n",
-                                            "createdAt": "2026-04-14T21:26:42Z"
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            "id": "PVTI_lADOD_WuSc4BS4vIzgobuM4",
-                            "fieldValues": {
-                                "nodes": [
-                                    {},
-                                    {},
-                                    {},
-                                    {
-                                        "text": "Turn-On Delay",
-                                        "field": {
-                                            "name": "Title"
-                                        }
-                                    },
-                                    {
-                                        "name": "Marked for review",
-                                        "field": {
-                                            "name": "Status"
-                                        }
-                                    },
-                                    {
-                                        "name": "24V",
-                                        "field": {
-                                            "name": "Output Voltage"
-                                        }
-                                    },
-                                    {
-                                        "name": "Main Output",
-                                        "field": {
-                                            "name": "Category"
-                                        }
-                                    }
-                                ]
-                            },
-                            "content": {
-                                "number": 32,
-                                "title": "Turn-On Delay",
-                                "body": "**Spec:** < 2 seconds @ 115Vac\n\nMeasure AC input voltage with differential probe, passive probe on DC output. Check the time between AC turn-on and DC turn-on, at full load.",
-                                "state": "OPEN",
-                                "labels": {
-                                    "nodes": [
-                                        {
-                                            "name": "GTM965500P"
-                                        }
-                                    ]
-                                },
-                                "comments": {
-                                    "nodes": [
-                                        {
-                                            "author": {
-                                                "login": "Vision314"
-                                            },
-                                            "body": "[RESULT]\n239ms @ 22.9A\n\n<img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/7ea24ab2-16f8-4452-bcd3-f8ab45bfeb98\" />",
-                                            "createdAt": "2026-04-06T19:17:39Z"
-                                        },
-                                        {
-                                            "author": {
-                                                "login": "Vision314"
-                                            },
-                                            "body": "[RESULT]\n\n# GTSZ\n\n\n| Condition | Spec (mS) | Reading (mS) | Picture | Result |\n|------------|-----------|--------------|---------|--------|\n|  100Vac, 22.916A    | 2000      | 1150         |     <img width=\"482\" height=\"289\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/cc52140f-b77a-4ff7-805c-decb83982215\" />    | PASS   |\n| 240Vac, 22.916A    | 2000      | 710          |     <img width=\"495\" height=\"297\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/66559a5a-2693-4456-a276-1bb72705e811\" />    | PASS   |",
-                                            "createdAt": "2026-04-16T15:30:56Z"
-                                        },
-                                        {
-                                            "author": {
-                                                "login": "lauxtim"
-                                            },
-                                            "body": "@Vision314 \n> # GTSZ\n> Condition\tSpec (mS)\tReading (mS)\tResult\n> 100Vac, 22.916A\t2000\t1150\tPASS\n> 240Vac, 22.916A\t2000\t710\t\tPASS\n\nSuzhou's delays are much longer than expected. I suspect something is not quite right on Suzhou unit. The turn-on delays should be relatively constant regardless of output voltage. How do we mark this to let them know as an FYI?\n",
-                                            "createdAt": "2026-04-16T20:54:10Z"
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        {
                             "id": "PVTI_lADOD_WuSc4BS4vIzgobuNE",
                             "fieldValues": {
                                 "nodes": [
@@ -2503,136 +2710,6 @@
                                             },
                                             "body": "[RESULT]\n### Output Voltage Overshoot\n| Condition | 90 Vac | 264 Vac |\n|-----------|--------|---------|\n| No Load   |      0mV  |   0mV      |\n| Full Load |    0mV   |     0 mV   |\n\n### Output Voltage Overshoot\n| Condition | 90 Vac | 264 Vac |\n|-----------|--------|---------|\n| No Load   |  <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/a25544ae-c0fe-4a17-b550-a0ac9e526f77\" /> | <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/16e9c2d9-149e-4bc3-aef1-30ac4091fb8d\" /> |\n| Full Load  |  <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/ab9a0792-be17-4b3b-8d79-1b2cafde6a20\" /> |  <img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/8405c2d5-ebfe-4180-8164-63c77d7aa0c5\" />  |",
                                             "createdAt": "2026-04-06T19:41:43Z"
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            "id": "PVTI_lADOD_WuSc4BS4vIzgobuQQ",
-                            "fieldValues": {
-                                "nodes": [
-                                    {},
-                                    {},
-                                    {},
-                                    {
-                                        "text": "Output Voltage Fine Adjustment",
-                                        "field": {
-                                            "name": "Title"
-                                        }
-                                    },
-                                    {
-                                        "name": "Clarification/Re-Test Req'd",
-                                        "field": {
-                                            "name": "Status"
-                                        }
-                                    },
-                                    {
-                                        "name": "54V",
-                                        "field": {
-                                            "name": "Output Voltage"
-                                        }
-                                    },
-                                    {
-                                        "name": "Main Output",
-                                        "field": {
-                                            "name": "Category"
-                                        }
-                                    }
-                                ]
-                            },
-                            "content": {
-                                "number": 59,
-                                "title": "Output Voltage Fine Adjustment",
-                                "body": "**Spec:** Via potentiometer, \u00b15% adjustment range (Note 1)\n\nRun at nominal line voltage (e.g. 115Vac)\n\nSense leads (SNS) disconnected.\n\nAdjust the potentiometer to minimum and maximum positions. Record the minimum and maximum output voltage, measured at the PCB.\n\n51.3V -> 56.7",
-                                "state": "OPEN",
-                                "labels": {
-                                    "nodes": [
-                                        {
-                                            "name": "GTM965500P"
-                                        }
-                                    ]
-                                },
-                                "comments": {
-                                    "nodes": [
-                                        {
-                                            "author": {
-                                                "login": "Vision314"
-                                            },
-                                            "body": "[CHANGE]\nRa8, Ra11 = 200kOhm\nRa9, Ra12 = 4kOhm\nRa10, Ra13 = 10kOhm\n\nRa14 = 18kOhm",
-                                            "createdAt": "2026-04-06T14:26:53Z"
-                                        },
-                                        {
-                                            "author": {
-                                                "login": "lauxtim"
-                                            },
-                                            "body": "@Vision314 Good, can you make a separate 'result' tag for the two voltage measurements after the change?\n\nAnd flag the \"Changes required\" field as \"Yes\"...although I guess that might be irrelevant if we are parsing and checking for the 'change' word",
-                                            "createdAt": "2026-04-16T21:08:03Z"
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            "id": "PVTI_lADOD_WuSc4BS4vIzgobuNI",
-                            "fieldValues": {
-                                "nodes": [
-                                    {},
-                                    {},
-                                    {},
-                                    {
-                                        "text": "Turn-On Delay",
-                                        "field": {
-                                            "name": "Title"
-                                        }
-                                    },
-                                    {
-                                        "name": "Clarification/Re-Test Req'd",
-                                        "field": {
-                                            "name": "Status"
-                                        }
-                                    },
-                                    {
-                                        "name": "54V",
-                                        "field": {
-                                            "name": "Output Voltage"
-                                        }
-                                    },
-                                    {
-                                        "name": "Main Output",
-                                        "field": {
-                                            "name": "Category"
-                                        }
-                                    }
-                                ]
-                            },
-                            "content": {
-                                "number": 33,
-                                "title": "Turn-On Delay",
-                                "body": "**Spec:** < 2 seconds @ 115Vac\n\nMeasure AC input voltage with differential probe, passive probe on DC output. Check the time between AC turn-on and DC turn-on, at full load.",
-                                "state": "OPEN",
-                                "labels": {
-                                    "nodes": [
-                                        {
-                                            "name": "GTM965500P"
-                                        }
-                                    ]
-                                },
-                                "comments": {
-                                    "nodes": [
-                                        {
-                                            "author": {
-                                                "login": "Vision314"
-                                            },
-                                            "body": "[RESULT]\n227ms @ 10.2A\n\n<img width=\"1024\" height=\"600\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/e052406d-70a9-452d-ae77-37cf0badc94f\" />",
-                                            "createdAt": "2026-04-06T20:23:32Z"
-                                        },
-                                        {
-                                            "author": {
-                                                "login": "lauxtim"
-                                            },
-                                            "body": "> [RESULT] 227ms @ 10.2A\n\nSince the delay is considerably less than 2 seconds, there's no concern. Turn on delay is the time between AC turn on and when the output reaches 100%  * V_out. I realize I did not explicitly write time to 100%, and DC turn-on could be interptetted as the moment the DC starts coming up. For rise-time, which is not this test, measured as the time it takes to rise from V_out * 10% to V_out * 90%. \n\nHere, the second cursor should have been about 50ms farther out, when output voltage reaches 100%.\n\nSuggest re-testing this one, or adding a note to the screenshot indicating cursor does not match up with actual delay, and then estimate the turn on delay by eye.\n\n",
-                                            "createdAt": "2026-04-16T20:44:58Z"
                                         }
                                     ]
                                 }
