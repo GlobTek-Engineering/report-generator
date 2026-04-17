@@ -1,5 +1,5 @@
 # GTM965500P Test Report Generator
-
+## https://globtek-engineering.github.io/report-generator/
 Pulls live data from the GitHub project board and generates test reports in HTML, DOCX, and PDF formats — split by output voltage (12V, 24V, 54V, Model Level) and as a combined all-models report.
 
 ---
