@@ -44,3 +44,7 @@ clean:
 	-rm -f $(RAW_JSON) $(PRETTY_JSON)
 	-rm -rf docx/ pdf/ .img_cache/ html/
 	@echo "Cleaned up"
+
+pages:
+	@echo "Copying /html/GTM965500P_TestReport.html to index.html"
+	cp html/GTM965500P_Test_Report.html ~/projects/report-generator/index.html 
